@@ -1,0 +1,11 @@
+services:
+  - type: web
+    name: praba-hr-adms
+    env: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn server:app
+    envVars:
+      - key: COMPANY_ID
+        value: praba_engineering_works
+      - key: FIREBASE_SERVICE_ACCOUNT
+        sync: false
