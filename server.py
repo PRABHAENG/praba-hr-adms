@@ -209,6 +209,7 @@ def get_attendance():
             return jsonify({'date': date, 'records': []})
     except Exception as e:
         return jsonify({'error': str(e)}), 500
+
         
 # Initialize Firebase on startup
 init_firebase()
