@@ -195,6 +195,20 @@ def save_to_firebase(records):
     except Exception as e:
         logger.error(f"Firebase save error: {e}")
 
+@app.route('/api/attendance', methods=['GET'])
+def get_attendance():
+    try:
+        if db is None:
+            return jsonify({'error': 'Firebase not connected'}), 500
+        date = request.args.get('date', datetime.now().strftime('%Y-%m-%d'))
+        doc_ref = db.collection('attendance').document(date)
+        doc = doc_ref.get()
+        if doc.exists:
+            return jsonify({'date': date, 'records': doc.to_dict().get('records', [])})
+        else:
+            return jsonify({'date': date, 'records': []})
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
 # Initialize Firebase on startup
 init_firebase()
 
