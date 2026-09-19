@@ -60,8 +60,7 @@ def cdata():
         options = "GET OPTION FROM: " + sn
         response_text = f"""
 ATTLOGStamp=None
-OPERLOGStamp=9999
-ATTPHOTOStamp=None
+OPERLOGStamp=9999ATTPHOTOStamp=None
 ErrorDelay=30
 Delay=10
 TransTimes=00:00;14:05
