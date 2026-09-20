@@ -212,7 +212,17 @@ def get_attendance():
         
 # Initialize Firebase on startup
 init_firebase()
-
+# Keep-alive thread
+import threading
+def keep_alive_ping():
+    import time, urllib.request
+    while True:
+        time.sleep(840)
+        try:
+            urllib.request.urlopen('https://praba-hr-adms.onrender.com/')
+        except:
+            pass
+threading.Thread(target=keep_alive_ping, daemon=True).start()
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 5000))
     app.run(host='0.0.0.0', port=port, debug=False)
