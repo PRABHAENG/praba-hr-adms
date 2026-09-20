@@ -1,0 +1,2355 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Praba HR Pro</title>
+<style>
+:root {
+  --navy: #0284c7;
+  --navy2: #0369a1;
+  --navy3: #075985;
+  --teal: #0d9488;
+  --teal2: #38bdf8;
+  --blue: #1d4ed8;
+  --gold: #fbbf24;
+  --red: #f87171;
+  --green: #4ade80;
+  --text: #ffffff;
+  --text2: #bae6fd;
+  --border: rgba(255,255,255,0.15);
+  --card: rgba(255,255,255,0.12);
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:#0284c7;color:#ffffff;min-height:100vh;font-weight:600;}
+
+/* LOGIN */
+#loginPage{min-height:100vh;display:flex;align-items:center;justify-content:center;background:linear-gradient(160deg,#87ceeb 0%,#b8e8f8 40%,#d6f4ff 70%,#87ceeb 100%);}
+.login-box{background:rgba(255,255,255,0.92);backdrop-filter:blur(20px);border:1px solid rgba(255,255,255,0.8);border-radius:20px;padding:40px;width:100%;max-width:420px;box-shadow:0 25px 50px rgba(0,100,180,0.2);}
+.login-logo{text-align:center;margin-bottom:28px;}
+.login-logo h1{font-size:26px;font-weight:800;color:#0f4c81;letter-spacing:-0.5px;}
+.login-logo p{color:#1e5a8a;font-size:13px;margin-top:4px;}
+.login-logo .company{font-size:11px;color:#d4500a;margin-top:6px;text-transform:uppercase;letter-spacing:1px;font-weight:700;}
+.fld{margin-bottom:16px;}
+.fld label{display:block;font-size:12px;color:#1e5a8a;margin-bottom:6px;text-transform:uppercase;letter-spacing:0.5px;font-weight:600;}
+.fld input,.fld select{width:100%;padding:12px 14px;background:#f0f8ff;border:1.5px solid #87ceeb;border-radius:10px;color:#0f2744;font-size:14px;outline:none;transition:border 0.2s;}
+.fld input:focus,.fld select:focus{border-color:#0f4c81;background:#e8f4ff;}
+.fld select option{background:#f0f8ff;color:#0f2744;}
+.pw-wrap{position:relative;}
+.pw-wrap input{padding-right:44px;}
+.pw-eye{position:absolute;right:12px;top:50%;transform:translateY(-50%);background:none;border:none;color:#1e5a8a;cursor:pointer;font-size:16px;padding:4px;}
+.login-btn{width:100%;padding:13px;background:linear-gradient(135deg,var(--teal),var(--blue));border:none;border-radius:10px;color:white;font-size:15px;font-weight:700;cursor:pointer;margin-top:8px;transition:opacity 0.2s;}
+.login-btn:hover{opacity:0.9;}
+.login-hint{margin-top:12px;padding:10px 14px;background:rgba(13,148,136,0.1);border:1px solid rgba(13,148,136,0.2);border-radius:8px;font-size:12px;color:var(--teal2);}
+.err{color:#dc2626;font-size:13px;text-align:center;margin-top:8px;font-weight:600;}
+
+/* APP LAYOUT */
+#appPage{display:none;min-height:100vh;}
+.layout{display:flex;min-height:100vh;}
+
+/* SIDEBAR - Blue */
+.sidebar{width:220px;background:linear-gradient(180deg,#0284c7 0%,#0369a1 100%);border-right:1px solid rgba(255,255,255,0.15);display:flex;flex-direction:column;position:fixed;height:100vh;left:0;top:0;z-index:100;transition:transform 0.3s;overflow-y:auto;}
+.sb-logo{padding:20px 16px;border-bottom:1px solid rgba(255,255,255,0.15);}
+.sb-logo h2{font-size:15px;font-weight:800;color:#ffffff;}
+.sb-logo p{font-size:11px;color:#bae6fd;margin-top:2px;}
+.sb-section{padding:8px 0;}
+.sb-label{font-size:10px;color:#bae6fd;text-transform:uppercase;letter-spacing:1px;padding:8px 16px 4px;}
+.nav{display:flex;align-items:center;gap:10px;padding:9px 16px;cursor:pointer;font-size:13px;color:#e0f2fe;border-left:3px solid transparent;transition:all 0.15s;}
+.nav:hover{background:rgba(255,255,255,0.12);color:#ffffff;}
+.nav.active{background:rgba(255,255,255,0.2);color:#ffffff;border-left-color:#ffffff;font-weight:700;}
+.nav-icon{font-size:22px;width:26px;flex-shrink:0;}
+.sb-footer{margin-top:auto;padding:14px 16px;border-top:1px solid rgba(255,255,255,0.15);}
+.sb-user{display:flex;align-items:center;gap:10px;margin-bottom:10px;}
+.sb-avatar{width:34px;height:34px;background:rgba(255,255,255,0.25);border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:13px;flex-shrink:0;color:#ffffff;}
+.sb-uname{font-size:13px;font-weight:600;color:#ffffff;}
+.sb-role{font-size:11px;color:#bae6fd;}
+.sb-dot{width:7px;height:7px;background:#4ade80;border-radius:50%;margin-left:auto;animation:pulse 2s infinite;}
+@keyframes pulse{0%,100%{opacity:1;}50%{opacity:0.3;}}
+.logout-btn{width:100%;padding:8px;background:rgba(239,68,68,0.2);border:1px solid rgba(239,68,68,0.3);border-radius:8px;color:#fca5a5;cursor:pointer;font-size:12px;}
+
+/* MAIN - Orange */
+.main{margin-left:220px;flex:1;padding:24px;background:#0284c7;min-height:100vh;}
+.mobile-bar{display:none;background:#0284c7;border-bottom:1px solid rgba(255,255,255,0.15);padding:12px 16px;position:fixed;top:0;left:0;right:0;z-index:200;align-items:center;justify-content:space-between;}
+.hamburger{background:none;border:none;color:#ffffff;font-size:22px;cursor:pointer;}
+.overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:99;}
+
+/* CARDS / STATS */
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin-bottom:20px;}
+.stat{background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.25);border-radius:12px;padding:16px;}
+.stat-icon{font-size:36px;margin-bottom:10px;}
+.stat-val{font-size:28px;font-weight:900;color:#ffffff;}
+.stat-lbl{font-size:12px;color:#bae6fd;margin-top:4px;font-weight:700;}
+
+/* CARD */
+.card{background:rgba(255,255,255,0.12);border:1px solid rgba(255,255,255,0.2);border-radius:12px;padding:18px;margin-bottom:16px;}
+.card-title{font-size:14px;font-weight:800;margin-bottom:14px;display:flex;align-items:center;gap:8px;color:#ffffff;text-transform:uppercase;letter-spacing:0.5px;}
+
+/* TABLE */
+.tbl-wrap{overflow-x:auto;}
+table{width:100%;border-collapse:collapse;font-size:13px;}
+th{padding:9px 12px;text-align:left;font-size:12px;font-weight:800;color:#bae6fd;text-transform:uppercase;letter-spacing:0.5px;border-bottom:1px solid rgba(255,255,255,0.2);white-space:nowrap;}
+td{padding:11px 12px;border-bottom:1px solid rgba(255,255,255,0.08);color:#ffffff;font-weight:600;}
+tr:hover td{background:rgba(255,255,255,0.08);}
+
+/* PAGE HEADER */
+.ph{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:20px;flex-wrap:gap;}
+.ph-title{font-size:22px;font-weight:900;color:#ffffff;}
+.ph-sub{font-size:12px;color:#bae6fd;margin-top:3px;font-weight:600;}
+
+/* BADGES */
+.badge{display:inline-block;padding:3px 8px;border-radius:20px;font-size:11px;font-weight:600;}
+.b-green{background:rgba(34,197,94,0.15);color:#4ade80;}
+.b-red{background:rgba(239,68,68,0.15);color:#f87171;}
+.b-yellow{background:rgba(245,158,11,0.15);color:#fbbf24;}
+.b-blue{background:rgba(37,99,235,0.15);color:#60a5fa;}
+.b-teal{background:rgba(13,148,136,0.15);color:#2dd4bf;}
+.b-gray{background:rgba(148,163,184,0.15);color:#94a3b8;}
+
+/* FORM */
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.fg{display:flex;flex-direction:column;gap:5px;}
+.fg label{font-size:11px;color:var(--text2);text-transform:uppercase;letter-spacing:0.5px;}
+.fg input,.fg select,.fg textarea{padding:9px 12px;background:rgba(255,255,255,0.05);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:13px;outline:none;}
+.fg input:focus,.fg select:focus{border-color:var(--teal);}
+.fg select option{background:#1e293b;}
+
+/* BUTTONS */
+.btn{padding:9px 18px;border-radius:8px;border:none;cursor:pointer;font-size:13px;font-weight:600;transition:opacity 0.2s;}
+.btn:hover{opacity:0.85;}
+.btn-teal{background:var(--teal);color:white;}
+.btn-blue{background:var(--blue);color:white;}
+.btn-green{background:#16a34a;color:white;}
+.btn-red{background:#dc2626;color:white;}
+.btn-gold{background:var(--gold);color:#0f172a;}
+.btn-sm{padding:5px 10px;font-size:11px;}
+.btn-ghost{background:rgba(255,255,255,0.06);color:var(--text2);border:1px solid var(--border);}
+
+/* MODAL */
+.modal-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:500;align-items:center;justify-content:center;}
+.modal-bg.show{display:flex;}
+.modal{background:var(--navy2);border:1px solid var(--border);border-radius:16px;padding:24px;width:100%;max-width:560px;margin:16px;max-height:90vh;overflow-y:auto;}
+.modal-title{font-size:16px;font-weight:800;margin-bottom:20px;}
+.modal-footer{display:flex;gap:10px;justify-content:flex-end;margin-top:20px;}
+
+/* PAYSLIP PRINT */
+.payslip-print{background:white;color:#1e293b;padding:0;border-radius:12px;font-family:'Segoe UI',sans-serif;overflow:hidden;}
+.ps-header{background:#0369a1;color:white;padding:20px 28px;display:flex;justify-content:space-between;align-items:center;}
+.ps-company{font-size:20px;font-weight:900;letter-spacing:0.5px;}
+.ps-addr{font-size:11px;opacity:0.85;margin-top:4px;}
+.ps-title{text-align:right;}
+.ps-title h2{font-size:18px;font-weight:900;letter-spacing:1px;}
+.ps-title p{font-size:12px;opacity:0.85;margin-top:2px;}
+.ps-divider{height:4px;background:linear-gradient(90deg,#f97316,#fbbf24,#f97316);}
+.ps-grid{display:grid;grid-template-columns:1fr 1fr;gap:0;border:1px solid #e2e8f0;margin:20px 28px 0;border-radius:8px;overflow:hidden;}
+.ps-field{padding:10px 14px;border-bottom:1px solid #e2e8f0;}
+.ps-field:nth-child(odd){border-right:1px solid #e2e8f0;background:#f8fafc;}
+.ps-field:nth-child(even){background:#ffffff;}
+.ps-field-label{font-size:10px;color:#64748b;text-transform:uppercase;letter-spacing:0.5px;font-weight:600;}
+.ps-field-val{font-size:14px;font-weight:700;color:#0f172a;margin-top:3px;}
+.ps-stats{display:grid;grid-template-columns:repeat(5,1fr);gap:0;margin:16px 28px;border:1px solid #e2e8f0;border-radius:8px;overflow:hidden;}
+.ps-stat{padding:12px 8px;text-align:center;border-right:1px solid #e2e8f0;background:#eff6ff;}
+.ps-stat:last-child{border-right:none;}
+.ps-stat-val{font-size:18px;font-weight:900;color:#0369a1;}
+.ps-stat-lbl{font-size:10px;color:#64748b;margin-top:3px;font-weight:600;}
+.ps-two{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:0 28px 16px;}
+.ps-section{border:1px solid #e2e8f0;border-radius:8px;overflow:hidden;}
+.ps-section-title{font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:0.5px;padding:10px 14px;border-bottom:2px solid;}
+.ps-earn-title{color:#166534;background:#f0fdf4;border-color:#16a34a;}
+.ps-ded-title{color:#991b1b;background:#fef2f2;border-color:#dc2626;}
+.ps-row{display:flex;justify-content:space-between;padding:7px 14px;font-size:13px;border-bottom:1px solid #e2e8f0;}
+.ps-row:nth-child(even){background:#f0f9ff;}
+.ps-row:nth-child(odd){background:#ffffff;}
+.ps-row:last-child{border-bottom:none;}
+.ps-total{display:flex;justify-content:space-between;font-weight:800;font-size:14px;padding:10px 14px;background:#f8fafc;border-top:2px solid #e2e8f0;}
+.ps-net{background:linear-gradient(135deg,#0369a1,#0284c7);color:white;margin:0 28px 16px;border-radius:8px;padding:16px 20px;display:flex;justify-content:space-between;align-items:center;}
+.ps-net-label{font-size:13px;opacity:0.9;font-weight:600;}
+.ps-net-amount{font-size:28px;font-weight:900;}
+.ps-sign{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin:0 28px 20px;}
+.ps-sign-box{border-top:2px solid #0369a1;padding-top:10px;text-align:center;font-size:12px;color:#475569;font-weight:600;}
+
+/* ATT SHEET */
+.att-sheet{background:white;color:#1e293b;padding:20px;border-radius:12px;}
+.as-header{background:#1e3a5f;color:white;padding:14px 18px;border-radius:8px;margin-bottom:14px;display:flex;justify-content:space-between;align-items:center;}
+.as-company{font-size:15px;font-weight:800;}
+.as-sub{font-size:11px;opacity:0.7;margin-top:2px;}
+.as-title{font-size:12px;font-weight:600;text-align:right;color:#93c5fd;}
+.as-emp-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:12px;}
+.as-emp-field{background:#f8fafc;border-radius:6px;padding:8px 12px;}
+.as-emp-label{font-size:10px;color:#64748b;text-transform:uppercase;}
+.as-emp-val{font-size:13px;font-weight:700;margin-top:2px;}
+.as-stats-row{display:grid;grid-template-columns:repeat(9,1fr);gap:4px;margin-bottom:12px;}
+.as-stat-box{background:#eff6ff;border-radius:6px;padding:6px;text-align:center;}
+.as-stat-val{font-size:14px;font-weight:800;color:#1e40af;}
+.as-stat-lbl{font-size:9px;color:#64748b;margin-top:1px;}
+.as-table{width:100%;border-collapse:collapse;font-size:12px;}
+.as-table th{background:#1e3a5f;color:white;padding:7px 8px;text-align:left;}
+.as-table td{padding:6px 8px;border-bottom:1px solid #f1f5f9;}
+.as-present{background:#dcfce7;color:#166534;padding:2px 6px;border-radius:4px;font-size:10px;font-weight:600;}
+.as-absent{background:#fee2e2;color:#991b1b;padding:2px 6px;border-radius:4px;font-size:10px;font-weight:600;}
+.as-sunday{background:#dbeafe;color:#1e40af;padding:2px 6px;border-radius:4px;font-size:10px;font-weight:600;}
+.as-holiday{background:#fef3c7;color:#92400e;padding:2px 6px;border-radius:4px;font-size:10px;font-weight:600;}
+.as-halfday{background:#f3e8ff;color:#6b21a8;padding:2px 6px;border-radius:4px;font-size:10px;font-weight:600;}
+
+/* PAGES */
+.page{display:none;}
+.page.active{display:block;}
+
+@media(max-width:768px){
+  .sidebar{transform:translateX(-100%);}
+  .sidebar.open{transform:translateX(0);}
+  .main{margin-left:0;padding:14px;padding-top:62px;}
+  .mobile-bar{display:flex;}
+  .overlay.show{display:block;}
+  .form-grid{grid-template-columns:1fr;}
+  .stats{grid-template-columns:repeat(2,1fr);}
+  .ps-grid,.ps-two,.as-emp-grid{grid-template-columns:1fr;}
+  .ps-stats,.as-stats-row{grid-template-columns:repeat(3,1fr);}
+  .ps-sign{grid-template-columns:1fr;}
+}
+@media print{
+  .no-print{display:none!important;}
+  .sidebar{display:none;}
+  .mobile-bar{display:none;}
+  .main{margin:0;padding:0;}
+  body{background:white;}
+}
+</style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div id="loginPage">
+  <div class="login-box">
+    <div class="login-logo">
+      <div style="margin-bottom:10px;display:flex;justify-content:center;">
+        <div id="loginLogoContainer" style="width:80px;height:60px;border-radius:12px;overflow:hidden;box-shadow:0 4px 16px rgba(0,0,0,0.4);cursor:pointer;" onclick="triggerLoginLogoUpload()" title="Click to change logo">
+          <svg id="loginDefaultLogo" width="80" height="60" viewBox="0 0 64 44" xmlns="http://www.w3.org/2000/svg" style="display:block;">
+            <defs>
+              <linearGradient id="lsky" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="#1a1a6e"/>
+                <stop offset="35%" stop-color="#3a1c8c"/>
+                <stop offset="65%" stop-color="#d4500a"/>
+                <stop offset="100%" stop-color="#ff8c00"/>
+              </linearGradient>
+              <linearGradient id="lsun" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="#ffffff"/>
+                <stop offset="100%" stop-color="#ffe066"/>
+              </linearGradient>
+              <linearGradient id="lmtn" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="#7b4fa6"/>
+                <stop offset="100%" stop-color="#4a2d6e"/>
+              </linearGradient>
+              <linearGradient id="lpine" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="#1a3a2a"/>
+                <stop offset="100%" stop-color="#0d1f17"/>
+              </linearGradient>
+            </defs>
+            <rect width="64" height="44" fill="url(#lsky)"/>
+            <g opacity="0.35" stroke="#ffaa44" stroke-width="1">
+              <line x1="32" y1="22" x2="32" y2="0"/>
+              <line x1="32" y1="22" x2="50" y2="0"/>
+              <line x1="32" y1="22" x2="64" y2="4"/>
+              <line x1="32" y1="22" x2="64" y2="16"/>
+              <line x1="32" y1="22" x2="14" y2="0"/>
+              <line x1="32" y1="22" x2="0" y2="4"/>
+              <line x1="32" y1="22" x2="0" y2="16"/>
+              <line x1="32" y1="22" x2="58" y2="10"/>
+              <line x1="32" y1="22" x2="6" y2="10"/>
+            </g>
+            <polygon points="8,32 20,16 26,26 32,20 38,26 44,16 56,32" fill="#5b3a8a" opacity="0.7"/>
+            <clipPath id="lsc"><rect x="0" y="0" width="64" height="25"/></clipPath>
+            <circle cx="32" cy="25" r="9" fill="url(#lsun)" clip-path="url(#lsc)" opacity="0.97"/>
+            <circle cx="32" cy="25" r="13" fill="#ffdd55" opacity="0.12" clip-path="url(#lsc)"/>
+            <polygon points="0,44 0,34 14,14 24,30 32,22 40,30 50,14 64,34 64,44" fill="url(#lmtn)"/>
+            <polygon points="0,44 0,34 14,14 7,44" fill="#3d2060" opacity="0.5"/>
+            <polygon points="64,44 64,34 50,14 57,44" fill="#3d2060" opacity="0.5"/>
+            <g fill="url(#lpine)">
+              <polygon points="2,44 5,36 8,44"/>
+              <polygon points="6,44 10,34 14,44"/>
+              <polygon points="11,44 14,37 17,44"/>
+              <polygon points="15,44 18,38 21,44"/>
+              <polygon points="43,44 46,38 49,44"/>
+              <polygon points="47,44 50,37 53,44"/>
+              <polygon points="51,44 54,34 57,44"/>
+              <polygon points="56,44 59,36 62,44"/>
+            </g>
+            <rect x="0" y="24.5" width="64" height="1.5" fill="#ff8c00" opacity="0.5"/>
+          </svg>
+          <img id="loginCustomLogo" style="display:none;width:80px;height:60px;object-fit:cover;" alt="Logo">
+        </div>
+        <input type="file" id="loginLogoInput" accept="image/*" style="display:none;" onchange="handleLoginLogoUpload(event)">
+      </div>
+      <h1>Praba HR Pro</h1>
+      <p>Professional HR Management System</p>
+    </div>
+    <div class="fld">
+      <label>Role</label>
+      <select id="lRole"><option value="admin">Admin</option><option value="supervisor">Supervisor</option></select>
+    </div>
+    <div class="fld">
+      <label>Username</label>
+      <input id="lUser" value="admin" placeholder="admin">
+    </div>
+    <div class="fld">
+      <label>Password</label>
+      <div class="pw-wrap">
+        <input id="lPass" type="password" placeholder="••••••••">
+        <button class="pw-eye" onclick="togglePw()">👁️</button>
+      </div>
+    </div>
+    <button class="login-btn" onclick="doLogin()">Login →</button>
+    <div class="err" id="lErr"></div>
+
+  </div>
+</div>
+
+<!-- APP -->
+<div id="appPage">
+  <div class="mobile-bar no-print">
+    <button class="hamburger" onclick="toggleSB()">☰</button>
+    <span style="font-weight:800;font-size:14px;color:#2dd4bf;">Praba HR Pro</span>
+    <div class="sb-dot"></div>
+  </div>
+  <div class="overlay" id="overlay" onclick="toggleSB()"></div>
+
+  <div class="layout">
+    <!-- SIDEBAR -->
+    <div class="sidebar no-print" id="sidebar">
+      <div class="sb-logo" style="background:linear-gradient(180deg,#87ceeb 0%,#b8e8f8 50%,#d6f0ff 100%);padding:14px 16px 18px 16px;border-bottom:none;position:relative;">
+        <div style="display:flex;align-items:center;gap:12px;">
+          <div id="logoContainer" onclick="triggerLogoUpload()" title="Click to change logo" style="width:58px;height:44px;border-radius:8px;overflow:hidden;flex-shrink:0;box-shadow:0 3px 12px rgba(0,0,0,0.5);cursor:pointer;position:relative;border:1.5px solid rgba(255,255,255,0.2);">
+            <svg id="defaultLogo" width="58" height="44" viewBox="0 0 64 44" xmlns="http://www.w3.org/2000/svg" style="display:block;">
+              <defs>
+                <linearGradient id="sky3" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stop-color="#1a1a6e"/>
+                  <stop offset="35%" stop-color="#3a1c8c"/>
+                  <stop offset="65%" stop-color="#d4500a"/>
+                  <stop offset="100%" stop-color="#ff8c00"/>
+                </linearGradient>
+                <linearGradient id="sun3" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stop-color="#ffffff"/>
+                  <stop offset="100%" stop-color="#ffe066"/>
+                </linearGradient>
+                <linearGradient id="mtn1" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stop-color="#7b4fa6"/>
+                  <stop offset="100%" stop-color="#4a2d6e"/>
+                </linearGradient>
+                <linearGradient id="pine" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stop-color="#1a3a2a"/>
+                  <stop offset="100%" stop-color="#0d1f17"/>
+                </linearGradient>
+              </defs>
+              <rect width="64" height="44" fill="url(#sky3)"/>
+              <g opacity="0.35" stroke="#ffaa44" stroke-width="1">
+                <line x1="32" y1="22" x2="32" y2="0"/>
+                <line x1="32" y1="22" x2="50" y2="0"/>
+                <line x1="32" y1="22" x2="64" y2="4"/>
+                <line x1="32" y1="22" x2="64" y2="16"/>
+                <line x1="32" y1="22" x2="14" y2="0"/>
+                <line x1="32" y1="22" x2="0" y2="4"/>
+                <line x1="32" y1="22" x2="0" y2="16"/>
+                <line x1="32" y1="22" x2="58" y2="10"/>
+                <line x1="32" y1="22" x2="6" y2="10"/>
+              </g>
+              <polygon points="8,32 20,16 26,26 32,20 38,26 44,16 56,32" fill="#5b3a8a" opacity="0.7"/>
+              <clipPath id="sc3"><rect x="0" y="0" width="64" height="25"/></clipPath>
+              <circle cx="32" cy="25" r="9" fill="url(#sun3)" clip-path="url(#sc3)" opacity="0.97"/>
+              <circle cx="32" cy="25" r="13" fill="#ffdd55" opacity="0.12" clip-path="url(#sc3)"/>
+              <polygon points="0,44 0,34 14,14 24,30 32,22 40,30 50,14 64,34 64,44" fill="url(#mtn1)"/>
+              <polygon points="0,44 0,34 14,14 7,44" fill="#3d2060" opacity="0.5"/>
+              <polygon points="64,44 64,34 50,14 57,44" fill="#3d2060" opacity="0.5"/>
+              <g fill="url(#pine)">
+                <polygon points="2,44 5,36 8,44"/>
+                <polygon points="6,44 10,34 14,44"/>
+                <polygon points="11,44 14,37 17,44"/>
+                <polygon points="15,44 18,38 21,44"/>
+                <polygon points="43,44 46,38 49,44"/>
+                <polygon points="47,44 50,37 53,44"/>
+                <polygon points="51,44 54,34 57,44"/>
+                <polygon points="56,44 59,36 62,44"/>
+              </g>
+              <rect x="0" y="24.5" width="64" height="1.5" fill="#ff8c00" opacity="0.5"/>
+            </svg>
+            <img id="customLogo" style="display:none;width:58px;height:44px;object-fit:cover;" alt="Logo">
+          </div>
+          <div>
+            <h2 style="font-size:15px;font-weight:800;color:#0f2744;letter-spacing:-0.3px;white-space:nowrap;text-shadow:0 1px 2px rgba(255,255,255,0.5);">Praba HR Pro</h2>
+            <div style="font-size:10px;color:#1e5a8a;margin-top:2px;cursor:pointer;" onclick="triggerLogoUpload()">📷 Change logo</div>
+          </div>
+        </div>
+        <!-- Fade into sidebar -->
+        <div style="position:absolute;bottom:-16px;left:0;right:0;height:16px;background:linear-gradient(to bottom,#ff8c00,transparent);opacity:0.15;pointer-events:none;"></div>
+        <input type="file" id="logoUploadInput" accept="image/*" style="display:none;" onchange="handleLogoUpload(event)">
+      </div>
+      <div class="sb-section">
+        <div class="sb-label">Main</div>
+        <div class="nav active" onclick="showPage('dashboard',this)"><span class="nav-icon">📊</span>Dashboard</div>
+        <div class="nav" onclick="showPage('attendance',this)"><span class="nav-icon">📋</span>Attendance</div>
+        <div class="nav" onclick="showPage('bulkentry',this)"><span class="nav-icon">📝</span>Bulk Entry</div>
+      </div>
+      <div class="sb-section">
+        <div class="sb-label">HR</div>
+        <div class="nav" onclick="showPage('employees',this)" id="empNav"><span class="nav-icon">👥</span>Employees</div>
+        <div class="nav" onclick="showPage('leaves',this)"><span class="nav-icon">🌴</span>Leaves</div>
+        <div class="nav" onclick="showPage('loans',this)"><span class="nav-icon">💳</span>Advance/Loan</div>
+      </div>
+      <div class="sb-section" id="financeNav">
+        <div class="sb-label">Finance</div>
+        <div class="nav" onclick="showPage('payroll',this)"><span class="nav-icon">💰</span>Payroll</div>
+        <div class="nav" onclick="showPage('reports',this)"><span class="nav-icon">📈</span>Reports</div>
+        <div class="nav" onclick="showPage('history',this)"><span class="nav-icon">🗂️</span>History</div>
+      </div>
+      <div class="sb-section" id="settingsNav">
+        <div class="sb-label">Settings</div>
+        <div class="nav" onclick="showPage('holidays',this)"><span class="nav-icon">🎉</span>Holidays</div>
+        <div class="nav" onclick="showPage('deptdesig',this)"><span class="nav-icon">⚙️</span>Dept & Desig</div>
+        <div class="nav" onclick="showPage('company',this)"><span class="nav-icon">🏢</span>Company</div>
+      </div>
+      <div class="sb-footer">
+        <div class="sb-user">
+          <div class="sb-avatar" id="sbAvatar">A</div>
+          <div><div class="sb-uname" id="sbName">Admin</div><div class="sb-role" id="sbRole">Administrator</div></div>
+          <div class="sb-dot"></div>
+        </div>
+        <button class="logout-btn" onclick="doLogout()">🚪 Logout</button>
+      </div>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div class="main">
+
+      <!-- DASHBOARD -->
+      <div class="page active" id="page-dashboard">
+        <div class="ph">
+          <div><div class="ph-title">Dashboard</div><div class="ph-sub" id="dashDate"></div></div>
+          <button class="btn btn-teal btn-sm no-print" onclick="refreshDash()">🔄 Refresh</button>
+        </div>
+        <div class="stats">
+          <div class="stat"><div class="stat-icon">👥</div><div class="stat-val" id="dTotal">0</div><div class="stat-lbl">Total Employees</div></div>
+          <div class="stat"><div class="stat-icon">✅</div><div class="stat-val" style="color:#4ade80" id="dPresent">0</div><div class="stat-lbl">Present Today</div></div>
+          <div class="stat"><div class="stat-icon">❌</div><div class="stat-val" style="color:#f87171" id="dAbsent">0</div><div class="stat-lbl">Absent Today</div></div>
+          <div class="stat"><div class="stat-icon">🕐</div><div class="stat-val" style="color:#fbbf24" id="dLate">0</div><div class="stat-lbl">Late Today</div></div>
+          <div class="stat"><div class="stat-icon">💰</div><div class="stat-val" style="color:#2dd4bf;font-size:18px;" id="dPayroll">₹0</div><div class="stat-lbl">Monthly Payroll</div></div>
+          <div class="stat"><div class="stat-icon">💳</div><div class="stat-val" style="color:#fbbf24" id="dLoans">0</div><div class="stat-lbl">Active Loans</div></div>
+        </div>
+        <div class="card">
+          <div class="card-title">📋 Today's Attendance <span class="sb-dot" style="margin-left:4px;"></span></div>
+          <div class="tbl-wrap"><table><thead><tr><th>Employee</th><th>Dept</th><th>In Time</th><th>Out Time</th><th>Net Hrs</th><th>Status</th><th>Source</th></tr></thead>
+          <tbody id="dashAttTbl"><tr><td colspan="7" style="text-align:center;padding:24px;color:var(--text2);">⏳ Loading...</td></tr></tbody></table></div>
+        </div>
+        <div class="card">
+          <div class="card-title">👥 Employees</div>
+          <div class="tbl-wrap"><table><thead><tr><th>ID</th><th>Name</th><th>Designation</th><th>Dept</th><th>Salary</th><th>Status</th></tr></thead>
+          <tbody id="dashEmpTbl"></tbody></table></div>
+        </div>
+      </div>
+
+      <!-- ATTENDANCE -->
+      <div class="page" id="page-attendance">
+        <div class="ph">
+          <div><div class="ph-title">Attendance</div><div class="ph-sub">Mark & view attendance records</div></div>
+          <button class="btn btn-blue btn-sm" onclick="syncZKTeco()">⚡ ZKTeco Sync</button>
+        </div>
+        <div class="card">
+          <div class="card-title">✏️ Mark Attendance</div>
+          <div class="form-grid" style="margin-bottom:12px;">
+            <div class="fg"><label>Employee</label><select id="attEmp"></select></div>
+            <div class="fg"><label>Date</label><input type="date" id="attDate"></div>
+            <div class="fg"><label>In Time</label><input type="time" id="attIn" value="09:00"></div>
+            <div class="fg"><label>Out Time</label><input type="time" id="attOut" value="18:00"></div>
+          </div>
+          <button class="btn btn-teal" onclick="markAttendance()">✅ Mark Attendance</button>
+          <div id="attMsg" style="margin-top:10px;font-size:13px;"></div>
+        </div>
+        <div class="card">
+          <div class="card-title">📋 Records <span id="attRecCount" style="color:var(--text2);font-weight:400;"></span>
+            <div style="margin-left:auto;display:flex;gap:8px;">
+              <input type="date" id="attViewDate" style="padding:5px 8px;background:rgba(255,255,255,0.05);border:1px solid var(--border);border-radius:6px;color:var(--text);font-size:12px;" onchange="loadAttRecords()">
+              <button class="btn btn-ghost btn-sm" onclick="clearAttRecords()" id="clearAllBtn">🗑️ Clear All</button>
+            </div>
+          </div>
+          <div class="tbl-wrap"><table><thead><tr><th>Employee</th><th>Date</th><th>In</th><th>Out</th><th>Net Hrs</th><th>Status</th><th>OT</th><th>Actions</th></tr></thead>
+          <tbody id="attRecTbl"><tr><td colspan="8" style="text-align:center;padding:20px;color:var(--text2);">Select date to view records</td></tr></tbody></table></div>
+        </div>
+      </div>
+
+      <!-- BULK ENTRY -->
+      <div class="page" id="page-bulkentry">
+        <div class="ph"><div><div class="ph-title">Bulk Attendance Entry</div><div class="ph-sub">Mark attendance for all employees at once</div></div></div>
+        <div class="card">
+          <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px;flex-wrap:wrap;">
+            <div class="fg" style="flex:1;min-width:160px;"><label>Date</label><input type="date" id="bulkDate" onchange="loadBulkGrid()"></div>
+            <div id="bulkDayLabel" style="margin-top:16px;"></div>
+          </div>
+          <div id="bulkGrid"></div>
+          <button class="btn btn-green" onclick="saveBulk()" style="margin-top:16px;">💾 Save All</button>
+          <div id="bulkMsg" style="margin-top:10px;font-size:13px;"></div>
+        </div>
+      </div>
+
+      <!-- EMPLOYEES -->
+      <div class="page" id="page-employees">
+        <div class="ph">
+          <div><div class="ph-title">Employee Management</div></div>
+          <button class="btn btn-teal" onclick="openEmpModal()" id="addEmpBtn">+ Add Employee</button>
+        </div>
+        <div class="card">
+          <div class="tbl-wrap"><table><thead><tr><th>ID</th><th>Name</th><th>Designation</th><th>Dept</th><th>Basic Salary</th><th>Phone</th><th>Join Date</th><th>Status</th><th>Action</th></tr></thead>
+          <tbody id="empTbl"></tbody></table></div>
+        </div>
+      </div>
+
+      <!-- LEAVES -->
+      <div class="page" id="page-leaves">
+        <div class="ph"><div><div class="ph-title">Leave Management</div></div></div>
+        <div class="card">
+          <div class="card-title">🌴 Apply Leave</div>
+          <div class="form-grid" style="margin-bottom:12px;">
+            <div class="fg"><label>Employee</label><select id="lvEmp"></select></div>
+            <div class="fg"><label>From Date</label><input type="date" id="lvFrom"></div>
+            <div class="fg"><label>No. of Days</label><input type="number" id="lvDays" value="1" min="1"></div>
+            <div class="fg"><label>Leave Type</label><select id="lvType"><option value="paid">Paid Leave</option><option value="unpaid">Unpaid Leave</option><option value="casual">Casual Leave</option><option value="sick">Sick Leave</option></select></div>
+            <div class="fg" style="grid-column:1/-1;"><label>Reason</label><input type="text" id="lvReason" placeholder="Sick / Personal / Casual..."></div>
+          </div>
+          <div id="lvInfo" style="margin-bottom:12px;font-size:13px;"></div>
+          <button class="btn btn-gold" onclick="applyLeave()">🌴 Mark Leave</button>
+          <div id="lvMsg" style="margin-top:10px;font-size:13px;"></div>
+        </div>
+        <div class="card">
+          <div class="card-title">📋 Leave Records</div>
+          <div class="tbl-wrap"><table><thead><tr><th>Employee</th><th>From</th><th>Days</th><th>Type</th><th>Reason</th><th>Status</th><th>Action</th></tr></thead>
+          <tbody id="lvTbl"></tbody></table></div>
+        </div>
+      </div>
+
+      <!-- LOANS -->
+      <div class="page" id="page-loans">
+        <div class="ph"><div><div class="ph-title">Advance / Loan Management</div></div></div>
+        <div class="card">
+          <div class="card-title">+ New Advance/Loan</div>
+          <div class="form-grid" style="margin-bottom:12px;">
+            <div class="fg"><label>Employee</label><select id="lnEmp"></select></div>
+            <div class="fg"><label>Total Amount ₹</label><input type="number" id="lnAmount" value="10000"></div>
+            <div class="fg"><label>Monthly EMI ₹</label><input type="number" id="lnEmi" value="2000"></div>
+            <div class="fg"><label>Start Month</label><input type="month" id="lnStart"></div>
+            <div class="fg" style="grid-column:1/-1;"><label>Purpose</label><input type="text" id="lnPurpose" placeholder="Medical / Personal..."></div>
+          </div>
+          <button class="btn btn-blue" onclick="addLoan()" id="addLoanBtn">+ Add Loan/Advance</button>
+          <div id="lnMsg" style="margin-top:10px;font-size:13px;"></div>
+        </div>
+        <div class="card">
+          <div class="card-title">💳 Loan Records</div>
+          <div class="tbl-wrap"><table><thead><tr><th>Employee</th><th>Amount</th><th>Monthly EMI</th><th>Purpose</th><th>Start</th><th>Remaining</th><th>Status</th><th>Action</th></tr></thead>
+          <tbody id="lnTbl"></tbody></table></div>
+        </div>
+      </div>
+
+      <!-- PAYROLL -->
+      <div class="page" id="page-payroll">
+        <div class="ph"><div><div class="ph-title">Payroll</div></div></div>
+        <div style="display:flex;gap:12px;margin-bottom:16px;flex-wrap:wrap;">
+          <div class="fg" style="min-width:160px;"><label>Month</label><input type="month" id="prMonth" onchange="loadPayroll()"></div>
+          <div class="fg" style="min-width:160px;"><label>Department</label><select id="prDept" onchange="loadPayroll()"><option value="">All</option></select></div>
+        </div>
+        <div class="card">
+          <div class="tbl-wrap"><table>
+            <thead><tr><th>Employee</th><th>Present</th><th>OT Hrs</th><th>Sun/Hol</th><th>Gross</th><th>Loan EMI</th><th>Deductions</th><th>Net Pay</th><th>Actions</th></tr></thead>
+            <tbody id="prTbl"></tbody>
+          </table></div>
+          <div id="prTotal" style="text-align:right;padding:12px 0;font-size:15px;font-weight:800;color:var(--teal2);"></div>
+        </div>
+      </div>
+
+      <!-- REPORTS -->
+      <div class="page" id="page-reports">
+        <div class="ph"><div><div class="ph-title">Reports</div></div></div>
+        <div style="display:flex;gap:12px;margin-bottom:20px;flex-wrap:wrap;">
+          <div class="fg" style="min-width:160px;"><label>Month</label><input type="month" id="rpMonth"></div>
+          <div class="fg" style="min-width:160px;"><label>Department</label><select id="rpDept"><option value="">All Departments</option></select></div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;" class="form-grid">
+          <div class="card" style="cursor:pointer;" onclick="printMonthlySalary()">
+            <div style="font-size:32px;margin-bottom:8px;">💰</div>
+            <div style="font-size:14px;font-weight:700;">Monthly Salary Report</div>
+            <div style="font-size:12px;color:var(--text2);margin-top:4px;">All employees salary summary</div>
+            <button class="btn btn-teal btn-sm" style="margin-top:12px;">🖨️ Print / Open</button>
+          </div>
+          <div class="card" style="cursor:pointer;" onclick="printAttRegister()">
+            <div style="font-size:32px;margin-bottom:8px;">📋</div>
+            <div style="font-size:14px;font-weight:700;">Attendance Register</div>
+            <div style="font-size:12px;color:var(--text2);margin-top:4px;">Day-wise attendance grid</div>
+            <button class="btn btn-blue btn-sm" style="margin-top:12px;">🖨️ Print / Open</button>
+          </div>
+          <div class="card" style="cursor:pointer;" onclick="printDeptReport()">
+            <div style="font-size:32px;margin-bottom:8px;">🏢</div>
+            <div style="font-size:14px;font-weight:700;">Department-wise Report</div>
+            <div style="font-size:12px;color:var(--text2);margin-top:4px;">Payroll by department</div>
+            <button class="btn btn-ghost btn-sm" style="margin-top:12px;">🖨️ Print / Open</button>
+          </div>
+          <div class="card" style="cursor:pointer;" onclick="printBankSheet()">
+            <div style="font-size:32px;margin-bottom:8px;">🏦</div>
+            <div style="font-size:14px;font-weight:700;">Bank Transfer Sheet</div>
+            <div style="font-size:12px;color:var(--text2);margin-top:4px;">Salary disbursement sheet</div>
+            <button class="btn btn-gold btn-sm" style="margin-top:12px;">🖨️ Print / Open</button>
+          </div>
+        </div>
+        <div class="card" style="margin-top:16px;">
+          <div class="card-title">💾 Data Backup & Restore</div>
+          <div style="display:flex;gap:12px;flex-wrap:wrap;">
+            <button class="btn btn-green" onclick="downloadBackup()">⬇️ Download Backup</button>
+            <label class="btn btn-gold" style="cursor:pointer;">📤 Restore from Backup<input type="file" accept=".json" onchange="restoreBackup(event)" style="display:none;"></label>
+          </div>
+        </div>
+      </div>
+
+      <!-- HISTORY -->
+      <div class="page" id="page-history">
+        <div class="ph"><div><div class="ph-title">Payslip History</div><div class="ph-sub">All generated payslips permanently saved</div></div></div>
+        <div id="historyContent"><div style="text-align:center;padding:40px;color:var(--text2);">⏳ Loading history...</div></div>
+      </div>
+
+      <!-- HOLIDAYS -->
+      <div class="page" id="page-holidays">
+        <div class="ph"><div><div class="ph-title" id="holCount">Holidays (0)</div></div></div>
+        <div class="card">
+          <div style="display:flex;gap:10px;margin-bottom:16px;flex-wrap:wrap;">
+            <div class="fg" style="flex:1;min-width:140px;"><label>Date</label><input type="date" id="holDate"></div>
+            <div class="fg" style="flex:2;min-width:200px;"><label>Holiday Name</label><input type="text" id="holName" placeholder="e.g. Ugadi"></div>
+            <div style="display:flex;align-items:flex-end;"><button class="btn btn-teal" onclick="addHoliday()">+ Add</button></div>
+          </div>
+          <div id="holList"></div>
+        </div>
+      </div>
+
+      <!-- DEPT & DESIG -->
+      <div class="page" id="page-deptdesig">
+        <div class="ph"><div><div class="ph-title">Department & Designation</div></div></div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;" class="form-grid">
+          <div class="card">
+            <div class="card-title">🏢 Departments (<span id="deptCount">0</span>)</div>
+            <div style="display:flex;gap:8px;margin-bottom:14px;">
+              <input type="text" id="newDept" placeholder="New department..." style="flex:1;padding:8px 12px;background:rgba(255,255,255,0.05);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:13px;outline:none;">
+              <button class="btn btn-teal btn-sm" onclick="addDept()">+ Add</button>
+            </div>
+            <div id="deptList"></div>
+          </div>
+          <div class="card">
+            <div class="card-title">👤 Designations (<span id="desigCount">0</span>)</div>
+            <div style="display:flex;gap:8px;margin-bottom:14px;">
+              <input type="text" id="newDesig" placeholder="New designation..." style="flex:1;padding:8px 12px;background:rgba(255,255,255,0.05);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:13px;outline:none;">
+              <button class="btn btn-teal btn-sm" onclick="addDesig()">+ Add</button>
+            </div>
+            <div id="desigList"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- COMPANY -->
+      <div class="page" id="page-company">
+        <div class="ph"><div><div class="ph-title">Company Settings</div></div></div>
+        <div class="card">
+          <div class="form-grid" style="margin-bottom:14px;">
+            <div class="fg" style="grid-column:1/-1;"><label>Company Name</label><input id="cName" placeholder="PRABA ENGINEERING WORK'S"></div>
+            <div class="fg" style="grid-column:1/-1;"><label>Address</label><input id="cAddr" placeholder="IDA Jeedimetla, Hyderabad, Telangana"></div>
+            <div class="fg"><label>Phone</label><input id="cPhone" placeholder="7901341786"></div>
+            <div class="fg"><label>Email</label><input id="cEmail" placeholder="hr@company.com"></div>
+            <div class="fg"><label>Weekly Off</label><select id="cWeekOff"><option value="sunday">Sunday Only</option><option value="both">Saturday & Sunday</option><option value="none">No Weekly Off</option></select></div>
+            <div class="fg"><label>Working Hours/Day</label><input type="number" id="cWorkHrs" value="8"></div>
+            <div class="fg"><label>OT Rate (per hour ₹)</label><input type="number" id="cOtRate" value="100"></div>
+            <div class="fg"><label>Late Arrival Cutoff</label><input type="time" id="cLateCutoff" value="09:30"></div>
+          </div>
+          <button class="btn btn-teal" onclick="saveCompany()">💾 Save Settings</button>
+          <div id="cMsg" style="margin-top:10px;font-size:13px;"></div>
+        </div>
+        <div class="card">
+          <div class="card-title">💰 PF & ESI Settings</div>
+          <div class="form-grid">
+            <div class="fg">
+              <label>PF (Provident Fund)</label>
+              <select id="cPf"><option value="0">Disabled</option><option value="12">12% Employee + 12% Employer</option></select>
+            </div>
+            <div class="fg">
+              <label>ESI</label>
+              <select id="cEsi"><option value="0">Disabled</option><option value="0.75">0.75% (Enabled)</option></select>
+            </div>
+            <div class="fg"><label>ESI Salary Limit ₹</label><input type="number" id="cEsiLimit" value="21000"></div>
+            <div class="fg"><label>PF Salary Limit ₹</label><input type="number" id="cPfLimit" value="15000"></div>
+          </div>
+          <button class="btn btn-teal" onclick="saveCompany()" style="margin-top:12px;">💾 Save PF/ESI</button>
+        </div>
+      </div>
+
+    </div><!-- /main -->
+  </div><!-- /layout -->
+</div><!-- /appPage -->
+
+<!-- MODALS -->
+<!-- Add Employee Modal -->
+<div class="modal-bg" id="empModal">
+  <div class="modal">
+    <div class="modal-title" id="empModalTitle">👤 Add Employee</div>
+    <div class="form-grid">
+      <div class="fg"><label>Employee ID *</label><input id="eId" placeholder="EMP001"></div>
+      <div class="fg"><label>Full Name *</label><input id="eName" placeholder="Employee Name"></div>
+      <div class="fg"><label>Designation</label><select id="eDesig"></select></div>
+      <div class="fg"><label>Department</label><select id="eDept"></select></div>
+      <div class="fg"><label>Basic Salary ₹ *</label><input type="number" id="eSalary" value="15000"></div>
+      <div class="fg"><label>Phone</label><input id="ePhone" placeholder="9876543210"></div>
+      <div class="fg"><label>Email</label><input id="eEmail" placeholder="emp@company.com"></div>
+      <div class="fg"><label>Join Date</label><input type="date" id="eJoinDate"></div>
+      <div class="fg"><label>DA ₹</label><input type="number" id="eDA" value="0"></div>
+      <div class="fg"><label>HRA ₹</label><input type="number" id="eHRA" value="0"></div>
+      <div class="fg"><label>Medical Allowance ₹</label><input type="number" id="eMed" value="0"></div>
+      <div class="fg"><label>Conveyance ₹</label><input type="number" id="eConv" value="0"></div>
+      <div class="fg"><label>Other Allowance ₹</label><input type="number" id="eOther" value="0"></div>
+      <div class="fg"><label>Other Deductions ₹</label><input type="number" id="eDeduct" value="0"></div>
+    </div>
+    <div id="empModalMsg" style="margin-top:10px;font-size:13px;"></div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeModal('empModal')">Cancel</button>
+      <button class="btn btn-teal" onclick="saveEmployee()">💾 Save Employee</button>
+    </div>
+  </div>
+</div>
+
+<!-- Payslip Modal -->
+<div class="modal-bg" id="payslipModal">
+  <div class="modal" style="max-width:640px;">
+    <div class="modal-title no-print" style="display:none;">💰 Pay Slip</div>
+    <div id="payslipContent"></div>
+    <div class="modal-footer no-print">
+      <button class="btn btn-ghost" onclick="closeModal('payslipModal')">✕ Close</button>
+      <button class="btn btn-teal" onclick="printPayslip()">🖨️ Download Payslip</button>
+    </div>
+  </div>
+</div>
+
+<!-- Att Sheet Modal -->
+<div class="modal-bg" id="attSheetModal">
+  <div class="modal" style="max-width:900px;">
+    <div class="modal-title no-print">📋 Attendance Sheet</div>
+    <div id="attSheetContent"></div>
+    <div class="modal-footer no-print">
+      <button class="btn btn-ghost" onclick="closeModal('attSheetModal')">✕ Close</button>
+      <button class="btn btn-blue" onclick="printAttSheet()">🖨️ Print</button>
+    </div>
+  </div>
+</div>
+
+<!-- Firebase -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/firebase/10.12.5/firebase-app-compat.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/firebase/10.12.5/firebase-firestore-compat.min.js"></script>
+
+<script>
+// ═══════════════════════════════════════════
+// CORE STATE
+// ═══════════════════════════════════════════
+const USERS = {
+  admin: { pass: 'admin123', role: 'admin', name: 'Admin' },
+  supervisor: { pass: 'super123', role: 'supervisor', name: 'Supervisor' },
+  super: { pass: 'super123', role: 'supervisor', name: 'Supervisor' }
+};
+
+let db = null, currentUser = null;
+let employees = [], departments = [], designations = [], holidays = [], loans = [];
+let company = { name: "PRABA ENGINEERING WORK'S", addr: "IDA Jeedimetla, Hyderabad, Telangana", phone: "7901341786", email: "hr@abc.com", weekOff: "sunday", workHrs: 8, otRate: 100, lateCutoff: "09:30", pf: "0", esi: "0.75", esiLimit: 21000, pfLimit: 15000 };
+let editingEmpId = null;
+
+// Local storage fallback
+const LS = {
+  get: k => { try { return JSON.parse(localStorage.getItem('phr_' + k) || 'null'); } catch(e) { return null; } },
+  set: (k, v) => { try { localStorage.setItem('phr_' + k, JSON.stringify(v)); } catch(e) {} },
+  del: k => { try { localStorage.removeItem('phr_' + k); } catch(e) {} }
+};
+
+function loadFromLS() {
+  employees = LS.get('employees') || [{empId:'1',name:'Shiva',designation:'Manager',department:'HR',salary:23000,phone:'',email:'',joinDate:'',da:0,hra:0,med:0,conv:0,other:0,deduct:0,status:'active'}];
+  departments = LS.get('departments') || ['HR','ACCOUNT','PRODUCTION','STORE','MAINTENANCE'];
+  designations = LS.get('designations') || ['Manager','Senior Engineer','Junior Engineer','HR Executive','Accountant','Sr FITTER','Security','Jr FITTER','Welder','Grinder','Helper','G Manager'];
+  holidays = LS.get('holidays') || [{date:'2026-01-15',name:'Sankranti'},{date:'2026-03-19',name:'Ugadi'},{date:'2026-03-03',name:'Holi'}];
+  loans = LS.get('loans') || [];
+  company = LS.get('company') || company;
+}
+
+function saveToLS() {
+  LS.set('employees', employees);
+  LS.set('departments', departments);
+  LS.set('designations', designations);
+  LS.set('holidays', holidays);
+  LS.set('loans', loans);
+  LS.set('company', company);
+}
+
+// Attendance in localStorage by date
+function getAtt(date) { return LS.get('att_' + date) || []; }
+function setAtt(date, records) { LS.set('att_' + date, records); }
+
+// Firebase
+function initFirebase() {
+  try {
+    const cfg = {
+      apiKey: "AIzaSyA5QSaujgq705YKmr4-adY4TfmmnwvT2mk",
+      authDomain: "prabha-hr-pro.firebaseapp.com",
+      projectId: "prabha-hr-pro",
+      storageBucket: "prabha-hr-pro.firebasestorage.app",
+      messagingSenderId: "1095831294379",
+      appId: "1:1095831294379:web:11bacbc42ed17a2ac342ee"
+    };
+    if (!firebase.apps.length) firebase.initializeApp(cfg);
+    db = firebase.firestore();
+    syncFromFirebase();
+  } catch(e) { db = null; }
+}
+
+async function syncFromFirebase() {
+  if (!db) return;
+  try {
+    const doc = await db.collection('hrData').doc('main').get();
+    if (doc.exists) {
+      const d = doc.data();
+      if (d.employees?.length) { employees = d.employees; LS.set('employees', employees); }
+      if (d.departments?.length) { departments = d.departments; LS.set('departments', departments); }
+      if (d.designations?.length) { designations = d.designations; LS.set('designations', designations); }
+      if (d.holidays?.length) { holidays = d.holidays; LS.set('holidays', holidays); }
+      if (d.loans?.length) { loans = d.loans; LS.set('loans', loans); }
+      if (d.company) { company = d.company; LS.set('company', company); }
+      refreshCurrentPage();
+    }
+  } catch(e) {}
+}
+
+async function syncToFirebase() {
+  if (!db) return;
+  try {
+    await db.collection('hrData').doc('main').set({ employees, departments, designations, holidays, loans, company, updatedAt: new Date().toISOString() });
+  } catch(e) {}
+}
+
+async function saveAttFirebase(date, records) {
+  setAtt(date, records);
+  if (!db) return;
+  try {
+    await db.collection('attendance').doc(date).set({ records, updatedAt: new Date().toISOString() }, { merge: true });
+  } catch(e) {}
+}
+
+async function getAttFirebase(date) {
+  if (db) {
+    try {
+      const doc = await db.collection('attendance').doc(date).get();
+      if (doc.exists) {
+        const r = doc.data().records || [];
+        setAtt(date, r);
+        return r;
+      }
+    } catch(e) {}
+  }
+  // Try Render API
+  try {
+    const res = await fetch(`https://praba-hr-adms.onrender.com/api/attendance?date=${date}`, { signal: AbortSignal.timeout(5000) });
+    const data = await res.json();
+    if (data.records?.length) {
+      const r = data.records;
+      setAtt(date, r);
+      if (db) await db.collection('attendance').doc(date).set({ records: r }, { merge: true });
+      return r;
+    }
+  } catch(e) {}
+  return getAtt(date);
+}
+
+// ═══════════════════════════════════════════
+// LOGIN
+// ═══════════════════════════════════════════
+function togglePw() {
+  const i = document.getElementById('lPass');
+  const b = document.querySelector('.pw-eye');
+  i.type = i.type === 'password' ? 'text' : 'password';
+  b.textContent = i.type === 'password' ? '👁️' : '🙈';
+}
+
+function doLogin() {
+  const u = document.getElementById('lUser').value.trim().toLowerCase();
+  const p = document.getElementById('lPass').value.trim();
+  const role = document.getElementById('lRole').value;
+  const e = document.getElementById('lErr');
+  if (!u || !p) { e.textContent = '❌ Username మరియు Password enter చేయండి'; return; }
+  if (USERS[u] && USERS[u].pass === p) {
+    currentUser = { username: u, ...USERS[u] };
+    e.textContent = '';
+    document.getElementById('loginPage').style.display = 'none';
+    document.getElementById('appPage').style.display = 'block';
+    initApp();
+  } else {
+    e.textContent = '❌ Wrong username or password. Try: admin/admin123';
+  }
+}
+document.getElementById('lPass').addEventListener('keydown', ev => { if (ev.key === 'Enter') doLogin(); });
+
+function doLogout() {
+  currentUser = null;
+  document.getElementById('appPage').style.display = 'none';
+  document.getElementById('loginPage').style.display = 'flex';
+  document.getElementById('lPass').value = '';
+}
+
+// ═══════════════════════════════════════════
+// INIT
+// ═══════════════════════════════════════════
+function initApp() {
+  document.getElementById('sbAvatar').textContent = currentUser.name[0];
+  document.getElementById('sbName').textContent = currentUser.name;
+  document.getElementById('sbRole').textContent = currentUser.role === 'admin' ? 'Administrator' : 'Supervisor';
+  document.getElementById('dashDate').textContent = new Date().toLocaleDateString('en-IN', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+  if (currentUser.role !== 'admin') {
+    // Hide admin-only UI
+    document.getElementById('addEmpBtn').style.display = 'none';
+    document.getElementById('empNav').style.display = 'none';
+    document.getElementById('financeNav').style.display = 'none';
+    document.getElementById('settingsNav').style.display = 'none';
+  }
+
+  // Set defaults
+  const t = today();
+  document.getElementById('attDate').value = t;
+  document.getElementById('attViewDate').value = t;
+  document.getElementById('bulkDate').value = t;
+  document.getElementById('lvFrom').value = t;
+  const now = new Date();
+  const ym = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}`;
+  document.getElementById('prMonth').value = ym;
+  document.getElementById('rpMonth').value = ym;
+  document.getElementById('lnStart').value = ym;
+
+  // Supervisor restrictions
+  setTimeout(() => {
+    if (currentUser && currentUser.role !== 'admin') {
+      ['clearAllBtn','addLoanBtn'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.style.display = 'none';
+      });
+    }
+  }, 300);
+
+  loadFromLS();
+  initFirebase();
+  loadCompanySettings();
+  loadDeptDesig();
+  loadDashboard();
+  loadHolidays();
+}
+
+function today() { return new Date().toISOString().split('T')[0]; }
+
+function fmt(t) { if (!t) return '—'; return t.substring(0,5); }
+
+function netHrs(inT, outT) {
+  if (!inT || !outT) return 0;
+  const [ih,im] = inT.split(':').map(Number);
+  const [oh,om] = outT.split(':').map(Number);
+  return Math.max(0, ((oh*60+om) - (ih*60+im)) / 60);
+}
+
+function isHoliday(date) { return holidays.some(h => h.date === date); }
+function isWeeklyOff(date) {
+  const d = new Date(date);
+  const day = d.getDay();
+  if (company.weekOff === 'sunday') return day === 0;
+  if (company.weekOff === 'both') return day === 0 || day === 6;
+  return false;
+}
+
+function getHolidayName(date) { const h = holidays.find(h => h.date === date); return h ? h.name : ''; }
+
+function getStatus(inT, outT, date) {
+  if (isHoliday(date)) return 'holiday';
+  if (isWeeklyOff(date)) return 'sunday';
+  if (!inT) return 'absent';
+  const h = netHrs(inT, outT);
+  const wh = company.workHrs || 8;
+  if (h >= wh) return 'present';
+  if (h >= wh / 2) return 'half-day';
+  return 'half-day';
+}
+
+function statusBadge(s) {
+  const map = { present: ['b-green','Present'], absent: ['b-red','Absent'], 'half-day': ['b-blue','Half Day'], sunday: ['b-blue','Sunday'], holiday: ['b-yellow','Holiday'], 'sunday-ot': ['b-yellow','Sun OT'], 'holiday-ot': ['b-yellow','Hol OT'], late: ['b-yellow','Late'], leave: ['b-teal','Leave'], 'paid-leave': ['b-teal','Paid Leave'], 'unpaid-leave': ['b-red','Unpaid Leave'], synced: ['b-teal','Synced'] };
+  const [cls, label] = map[s] || ['b-gray', s];
+  return `<span class="badge ${cls}">${label}</span>`;
+}
+
+function showPage(p, el) {
+  document.querySelectorAll('.page').forEach(x => x.classList.remove('active'));
+  document.querySelectorAll('.nav').forEach(x => x.classList.remove('active'));
+  document.getElementById('page-' + p).classList.add('active');
+  if (el) el.classList.add('active');
+  if (window.innerWidth <= 768) toggleSB(false);
+
+  if (p === 'dashboard') loadDashboard();
+  if (p === 'attendance') loadAttRecords();
+  if (p === 'bulkentry') loadBulkGrid();
+  if (p === 'employees') renderEmployees();
+  if (p === 'leaves') { renderLeaves(); populateEmpSelects(); }
+  if (p === 'loans') { renderLoans(); populateEmpSelects(); }
+  if (p === 'payroll') { loadPayroll(); populateDeptFilter(); }
+  if (p === 'reports') populateDeptFilter2();
+  if (p === 'history') loadHistory();
+  if (p === 'holidays') renderHolidays();
+  if (p === 'deptdesig') renderDeptDesig();
+  if (p === 'company') loadCompanySettings();
+}
+
+function refreshCurrentPage() {
+  loadDashboard();
+  renderEmployees();
+  renderDeptDesig();
+  renderHolidays();
+  renderLoans();
+  renderLeaves();
+}
+
+function toggleSB(force) {
+  const sb = document.getElementById('sidebar');
+  const ov = document.getElementById('overlay');
+  const open = force !== undefined ? force : !sb.classList.contains('open');
+  sb.classList.toggle('open', open);
+  ov.classList.toggle('show', open);
+}
+
+function openModal(id) { document.getElementById(id).classList.add('show'); }
+function closeModal(id) { document.getElementById(id).classList.remove('show'); }
+
+// ═══════════════════════════════════════════
+// DASHBOARD
+// ═══════════════════════════════════════════
+async function loadDashboard() {
+  document.getElementById('dTotal').textContent = employees.length;
+  const activeLoans = loans.filter(l => l.status === 'active').length;
+  document.getElementById('dLoans').textContent = activeLoans;
+
+  // Payroll estimate
+  const totalPay = employees.reduce((s, e) => s + (e.salary || 0), 0);
+  document.getElementById('dPayroll').textContent = '₹' + totalPay.toLocaleString('en-IN');
+
+  // Today attendance
+  const t = today();
+  const records = await getAttFirebase(t);
+  const present = records.filter(r => r.status === 'present' || r.status === 'half-day' || r.status === 'synced').length;
+  const late = records.filter(r => r.status === 'late').length;
+  document.getElementById('dPresent').textContent = present;
+  document.getElementById('dAbsent').textContent = Math.max(0, employees.length - present);
+  document.getElementById('dLate').textContent = late;
+
+  const tb = document.getElementById('dashAttTbl');
+  if (!records.length) {
+    tb.innerHTML = '<tr><td colspan="7" style="text-align:center;padding:24px;color:var(--text2);">📭 No attendance records today</td></tr>';
+  } else {
+    tb.innerHTML = records.map(r => {
+      const emp = employees.find(e => String(e.empId) === String(r.empId)) || { name: 'Emp #' + r.empId, department: '' };
+      const h = netHrs(r.inTime, r.outTime);
+      return `<tr><td><b>${emp.name}</b></td><td>${emp.department || '—'}</td><td>${fmt(r.inTime)}</td><td>${fmt(r.outTime)}</td><td>${h > 0 ? h.toFixed(1) + 'h' : '—'}</td><td>${statusBadge(r.status || 'synced')}</td><td><span class="badge b-teal">${r.source || 'Biometric'}</span></td></tr>`;
+    }).join('');
+  }
+
+  const etb = document.getElementById('dashEmpTbl');
+  etb.innerHTML = employees.map(e =>
+    `<tr><td>${e.empId}</td><td><b>${e.name}</b></td><td>${e.designation||'—'}</td><td>${e.department||'—'}</td><td>₹${(e.salary||0).toLocaleString('en-IN')}</td><td>${statusBadge('present')}</td></tr>`
+  ).join('') || '<tr><td colspan="6" style="text-align:center;color:var(--text2);">No employees</td></tr>';
+}
+
+function refreshDash() { loadDashboard(); }
+
+// ═══════════════════════════════════════════
+// ATTENDANCE
+// ═══════════════════════════════════════════
+async function markAttendance() {
+  const empId = document.getElementById('attEmp').value;
+  const date = document.getElementById('attDate').value;
+  const inT = document.getElementById('attIn').value;
+  const outT = document.getElementById('attOut').value;
+  const msg = document.getElementById('attMsg');
+
+  if (!empId || !date) { msg.innerHTML = '<span style="color:#f87171;">Select employee and date</span>'; return; }
+
+  const h = netHrs(inT, outT);
+  const wh = company.workHrs || 8;
+  let status = 'present';
+  if (h < wh / 2) status = 'half-day';
+  else if (inT > (company.lateCutoff || '09:30')) status = 'late';
+
+  msg.innerHTML = '<span style="color:var(--teal2);">⏳ Saving...</span>';
+
+  let records = await getAttFirebase(date);
+  records = records.filter(r => String(r.empId) !== String(empId));
+  records.push({ empId, date, inTime: inT, outTime: outT, status, source: 'manual', addedBy: currentUser.username, timestamp: Date.now() });
+
+  await saveAttFirebase(date, records);
+  msg.innerHTML = '<span style="color:#4ade80;">✅ Saved! Synced to all devices.</span>';
+  loadAttRecords();
+  if (document.getElementById('page-dashboard').classList.contains('active')) loadDashboard();
+}
+
+async function loadAttRecords() {
+  const date = document.getElementById('attViewDate').value;
+  if (!date) return;
+  const tb = document.getElementById('attRecTbl');
+  tb.innerHTML = '<tr><td colspan="8" style="text-align:center;padding:20px;color:var(--text2);">⏳ Loading...</td></tr>';
+
+  const records = await getAttFirebase(date);
+  document.getElementById('attRecCount').textContent = records.length ? `(${records.length})` : '';
+
+  if (!records.length) {
+    tb.innerHTML = `<tr><td colspan="8" style="text-align:center;padding:20px;color:var(--text2);">📭 No records for ${date}</td></tr>`;
+    return;
+  }
+
+  tb.innerHTML = records.map(r => {
+    const emp = employees.find(e => String(e.empId) === String(r.empId)) || { name: 'Emp #' + r.empId };
+    const h = netHrs(r.inTime, r.outTime);
+    const wh = company.workHrs || 8;
+    const ot = Math.max(0, h - wh);
+    return `<tr>
+      <td><b>${emp.name}</b></td><td>${r.date || date}</td>
+      <td style="color:#4ade80;">${fmt(r.inTime)}</td>
+      <td style="color:#fbbf24;">${fmt(r.outTime)}</td>
+      <td>${h > 0 ? h.toFixed(1) + 'h' : '—'}</td>
+      <td>${statusBadge(r.status || 'synced')}</td>
+      <td>${ot > 0 ? ot.toFixed(1) + 'h' : '—'}</td>
+      <td>${currentUser && currentUser.role === 'admin' ? `<button class="btn btn-red btn-sm" onclick="deleteAttRecord('${date}','${r.empId}')">🗑️</button>` : '—'}</td>
+    </tr>`;
+  }).join('');
+}
+
+async function deleteAttRecord(date, empId) {
+  if (!confirm('Delete this record?')) return;
+  let records = await getAttFirebase(date);
+  records = records.filter(r => String(r.empId) !== String(empId));
+  await saveAttFirebase(date, records);
+  loadAttRecords();
+}
+
+async function clearAttRecords() {
+  const date = document.getElementById('attViewDate').value;
+  if (!date || !confirm('Clear all records for ' + date + '?')) return;
+  await saveAttFirebase(date, []);
+  loadAttRecords();
+}
+
+async function syncZKTeco() {
+  const date = today();
+  const btn = event.target;
+  btn.textContent = '⏳ Syncing...';
+  btn.disabled = true;
+  try {
+    const res = await fetch(`https://praba-hr-adms.onrender.com/api/attendance?date=${date}`, { signal: AbortSignal.timeout(15000) });
+    const data = await res.json();
+    if (data.records?.length) {
+      const existing = getAtt(date);
+      const merged = [...existing];
+      data.records.forEach(r => {
+        if (!merged.find(m => String(m.empId) === String(r.empId) && m.source !== 'manual')) merged.push(r);
+      });
+      await saveAttFirebase(date, merged);
+      alert(`✅ Synced ${data.records.length} records from ZKTeco!`);
+      loadAttRecords();
+    } else {
+      alert('No new records from ZKTeco today');
+    }
+  } catch(e) {
+    alert('ZKTeco server waking up... Try again in 60 seconds');
+  }
+  btn.textContent = '⚡ ZKTeco Sync';
+  btn.disabled = false;
+}
+
+// ═══════════════════════════════════════════
+// BULK ENTRY
+// ═══════════════════════════════════════════
+async function loadBulkGrid() {
+  const date = document.getElementById('bulkDate').value;
+  if (!date) return;
+
+  const d = new Date(date);
+  const dayNames = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+  const dayName = dayNames[d.getDay()];
+  const isOff = isWeeklyOff(date);
+  const isHol = isHoliday(date);
+  const holName = getHolidayName(date);
+
+  let label = '';
+  if (isHol) label = `<span class="badge b-yellow">🎉 ${holName}</span>`;
+  else if (isOff) label = `<span class="badge b-blue">☀️ ${dayName} — ${company.weekOff === 'both' ? 'Week Off' : 'Sunday'}</span>`;
+  document.getElementById('bulkDayLabel').innerHTML = label;
+
+  const existing = await getAttFirebase(date);
+
+  let html = `<div class="tbl-wrap"><table>
+    <thead><tr><th>Employee</th><th>Dept</th><th>In Time</th><th>Out Time</th><th>Preview</th></tr></thead><tbody>`;
+
+  employees.forEach(emp => {
+    const rec = existing.find(r => String(r.empId) === String(emp.empId));
+    const inV = rec?.inTime || '09:00';
+    const outV = rec?.outTime || '18:00';
+    const h = netHrs(inV, outV);
+    const wh = company.workHrs || 8;
+    // Sunday or Holiday = all hours are OT
+    const ot = (isOff || isHol) ? h : Math.max(0, h - wh);
+    const st = isHol ? 'holiday' : isOff ? 'sunday' : getStatus(inV, outV, date);
+    html += `<tr>
+      <td><b>${emp.name}</b><br><small style="color:var(--text2);">${emp.empId}</small></td>
+      <td>${emp.department || '—'}</td>
+      <td><input type="time" id="bIn_${emp.empId}" value="${inV}" style="padding:5px 8px;background:rgba(255,255,255,0.05);border:1px solid var(--border);border-radius:6px;color:var(--text);font-size:12px;" onchange="updateBulkPreview('${emp.empId}','${date}')"></td>
+      <td><input type="time" id="bOut_${emp.empId}" value="${outV}" style="padding:5px 8px;background:rgba(255,255,255,0.05);border:1px solid var(--border);border-radius:6px;color:var(--text);font-size:12px;" onchange="updateBulkPreview('${emp.empId}','${date}')"></td>
+      <td id="bPrev_${emp.empId}">${statusBadge(st)} ${h.toFixed(1)}h ${ot > 0 ? `<span class="badge b-yellow">OT ${ot.toFixed(1)}h</span>` : ''}</td>
+    </tr>`;
+  });
+  html += '</tbody></table></div>';
+  document.getElementById('bulkGrid').innerHTML = html;
+}
+
+function updateBulkPreview(empId, date) {
+  const inT = document.getElementById('bIn_' + empId)?.value;
+  const outT = document.getElementById('bOut_' + empId)?.value;
+  const h = netHrs(inT, outT);
+  const wh = company.workHrs || 8;
+  // Sunday or Holiday = full hours are OT
+  const isOff = isWeeklyOff(date);
+  const isHol = isHoliday(date);
+  const ot = (isOff || isHol) ? h : Math.max(0, h - wh);
+  const st = (isOff || isHol) ? (isHol ? 'holiday' : 'sunday') : getStatus(inT, outT, date);
+  const prev = document.getElementById('bPrev_' + empId);
+  if (prev) prev.innerHTML = `${statusBadge(st)} ${h.toFixed(1)}h ${ot > 0 ? `<span class="badge b-yellow">OT ${ot.toFixed(1)}h</span>` : ''}`;
+}
+
+async function saveBulk() {
+  const date = document.getElementById('bulkDate').value;
+  const msg = document.getElementById('bulkMsg');
+  msg.innerHTML = '<span style="color:var(--teal2);">⏳ Saving...</span>';
+
+  const records = employees.map(emp => {
+    const inT = document.getElementById('bIn_' + emp.empId)?.value || '';
+    const outT = document.getElementById('bOut_' + emp.empId)?.value || '';
+    const isOff = isWeeklyOff(date);
+    const isHol = isHoliday(date);
+    // Sunday/Holiday లో పని చేస్తే status = 'sunday-ot' లేదా 'holiday-ot'
+    let status = getStatus(inT, outT, date);
+    if (inT && outT) {
+      if (isHol) status = 'holiday-ot';
+      else if (isOff) status = 'sunday-ot';
+    }
+    return { empId: emp.empId, date, inTime: inT, outTime: outT, status, source: 'manual', addedBy: currentUser.username, timestamp: Date.now() };
+  });
+
+  await saveAttFirebase(date, records);
+  msg.innerHTML = '<span style="color:#4ade80;">✅ All saved & synced!</span>';
+}
+
+// ═══════════════════════════════════════════
+// EMPLOYEES
+// ═══════════════════════════════════════════
+function renderEmployees() {
+  const tb = document.getElementById('empTbl');
+  if (!employees.length) { tb.innerHTML = '<tr><td colspan="9" style="text-align:center;padding:20px;color:var(--text2);">No employees. Click + Add Employee</td></tr>'; return; }
+  tb.innerHTML = employees.map(e =>
+    `<tr><td><b>${e.empId}</b></td><td>${e.name}</td><td>${e.designation||'—'}</td><td>${e.department||'—'}</td><td>₹${(e.salary||0).toLocaleString('en-IN')}</td><td>${e.phone||'—'}</td><td>${e.joinDate||'—'}</td><td>${statusBadge('present')}</td>
+    <td>${currentUser && currentUser.role === 'admin' ? `<button class="btn btn-blue btn-sm" onclick="editEmployee('${e.empId}')">✏️</button> <button class="btn btn-red btn-sm" onclick="deleteEmployee('${e.empId}')">🗑️</button>` : '—'}</td></tr>`
+  ).join('');
+}
+
+function openEmpModal(empId) {
+  editingEmpId = null;
+  document.getElementById('empModalTitle').textContent = '👤 Add Employee';
+  ['eId','eName','ePhone','eEmail','eJoinDate'].forEach(id => document.getElementById(id).value = '');
+  ['eSalary','eDA','eHRA','eMed','eConv','eOther','eDeduct'].forEach(id => document.getElementById(id).value = '0');
+  populateEmpSelects();
+  openModal('empModal');
+}
+
+function editEmployee(empId) {
+  const emp = employees.find(e => e.empId === empId);
+  if (!emp) return;
+  editingEmpId = empId;
+  document.getElementById('empModalTitle').textContent = '✏️ Edit Employee';
+  populateEmpSelects();
+  document.getElementById('eId').value = emp.empId;
+  document.getElementById('eName').value = emp.name;
+  document.getElementById('ePhone').value = emp.phone || '';
+  document.getElementById('eEmail').value = emp.email || '';
+  document.getElementById('eJoinDate').value = emp.joinDate || '';
+  document.getElementById('eSalary').value = emp.salary || 0;
+  document.getElementById('eDA').value = emp.da || 0;
+  document.getElementById('eHRA').value = emp.hra || 0;
+  document.getElementById('eMed').value = emp.med || 0;
+  document.getElementById('eConv').value = emp.conv || 0;
+  document.getElementById('eOther').value = emp.other || 0;
+  document.getElementById('eDeduct').value = emp.deduct || 0;
+  setTimeout(() => {
+    document.getElementById('eDesig').value = emp.designation || '';
+    document.getElementById('eDept').value = emp.department || '';
+  }, 50);
+  openModal('empModal');
+}
+
+function saveEmployee() {
+  const empId = document.getElementById('eId').value.trim();
+  const name = document.getElementById('eName').value.trim();
+  const msg = document.getElementById('empModalMsg');
+  if (!empId || !name) { msg.innerHTML = '<span style="color:#f87171;">ID and Name required</span>'; return; }
+
+  const emp = {
+    empId, name, designation: document.getElementById('eDesig').value, department: document.getElementById('eDept').value,
+    salary: parseFloat(document.getElementById('eSalary').value) || 0,
+    phone: document.getElementById('ePhone').value, email: document.getElementById('eEmail').value,
+    joinDate: document.getElementById('eJoinDate').value,
+    da: parseFloat(document.getElementById('eDA').value) || 0,
+    hra: parseFloat(document.getElementById('eHRA').value) || 0,
+    med: parseFloat(document.getElementById('eMed').value) || 0,
+    conv: parseFloat(document.getElementById('eConv').value) || 0,
+    other: parseFloat(document.getElementById('eOther').value) || 0,
+    deduct: parseFloat(document.getElementById('eDeduct').value) || 0,
+    status: 'active'
+  };
+
+  if (editingEmpId) {
+    const idx = employees.findIndex(e => e.empId === editingEmpId);
+    if (idx >= 0) employees[idx] = emp;
+  } else {
+    if (employees.find(e => e.empId === empId)) { msg.innerHTML = '<span style="color:#f87171;">Employee ID already exists</span>'; return; }
+    employees.push(emp);
+  }
+
+  saveToLS();
+  syncToFirebase();
+  renderEmployees();
+  closeModal('empModal');
+  msg.textContent = '';
+}
+
+function deleteEmployee(empId) {
+  if (!confirm('Delete this employee?')) return;
+  employees = employees.filter(e => e.empId !== empId);
+  saveToLS();
+  syncToFirebase();
+  renderEmployees();
+}
+
+function populateEmpSelects() {
+  const selects = ['attEmp', 'lvEmp', 'lnEmp', 'eDesig', 'eDept'];
+  const deptSels = ['eDept', 'prDept', 'rpDept'];
+
+  // Employee selects
+  const empOpts = employees.map(e => `<option value="${e.empId}">${e.name} (${e.empId})</option>`).join('');
+  ['attEmp','lvEmp','lnEmp'].forEach(id => { const el = document.getElementById(id); if (el) el.innerHTML = empOpts; });
+
+  // Designation
+  const desigEl = document.getElementById('eDesig');
+  if (desigEl) desigEl.innerHTML = designations.map(d => `<option value="${d}">${d}</option>`).join('');
+
+  // Department
+  const deptEl = document.getElementById('eDept');
+  if (deptEl) deptEl.innerHTML = departments.map(d => `<option value="${d}">${d}</option>`).join('');
+}
+
+// ═══════════════════════════════════════════
+// LEAVES
+// ═══════════════════════════════════════════
+function applyLeave() {
+  const empId = document.getElementById('lvEmp').value;
+  const from = document.getElementById('lvFrom').value;
+  const days = parseInt(document.getElementById('lvDays').value) || 1;
+  const type = document.getElementById('lvType').value;
+  const reason = document.getElementById('lvReason').value;
+  const msg = document.getElementById('lvMsg');
+
+  if (!empId || !from) { msg.innerHTML = '<span style="color:#f87171;">Select employee and date</span>'; return; }
+
+  const leave = { id: Date.now(), empId, from, days, type, reason, status: 'approved', appliedAt: new Date().toISOString() };
+
+  // Mark attendance for leave days
+  for (let i = 0; i < days; i++) {
+    const d = new Date(from);
+    d.setDate(d.getDate() + i);
+    const dateStr = d.toISOString().split('T')[0];
+    const records = getAtt(dateStr);
+    const filtered = records.filter(r => String(r.empId) !== String(empId));
+    filtered.push({ empId, date: dateStr, inTime: '', outTime: '', status: type === 'paid' ? 'paid-leave' : 'unpaid-leave', source: 'leave', timestamp: Date.now() });
+    saveAttFirebase(dateStr, filtered);
+  }
+
+  const existingLeaves = LS.get('leaves') || [];
+  existingLeaves.push(leave);
+  LS.set('leaves', existingLeaves);
+
+  msg.innerHTML = '<span style="color:#4ade80;">✅ Leave applied & attendance marked!</span>';
+  renderLeaves();
+}
+
+function renderLeaves() {
+  const leaves = LS.get('leaves') || [];
+  const tb = document.getElementById('lvTbl');
+  if (!leaves.length) { tb.innerHTML = '<tr><td colspan="7" style="text-align:center;padding:20px;color:var(--text2);">No leave records</td></tr>'; return; }
+  tb.innerHTML = leaves.slice().reverse().map(l => {
+    const emp = employees.find(e => String(e.empId) === String(l.empId));
+    return `<tr><td>${emp?.name || 'Emp #' + l.empId}</td><td>${l.from}</td><td>${l.days}</td><td>${statusBadge(l.type + '-leave')}</td><td>${l.reason || '—'}</td><td>${statusBadge('present')}</td>
+    <td>${currentUser && currentUser.role === 'admin' ? `<button class="btn btn-red btn-sm" onclick="deleteLeave(${l.id})">🗑️</button>` : '—'}</td></tr>`;
+  }).join('');
+}
+
+function deleteLeave(id) {
+  if (!confirm('Delete this leave?')) return;
+  let leaves = LS.get('leaves') || [];
+  leaves = leaves.filter(l => l.id !== id);
+  LS.set('leaves', leaves);
+  renderLeaves();
+}
+
+// ═══════════════════════════════════════════
+// LOANS
+// ═══════════════════════════════════════════
+function addLoan() {
+  const empId = document.getElementById('lnEmp').value;
+  const amount = parseFloat(document.getElementById('lnAmount').value) || 0;
+  const emi = parseFloat(document.getElementById('lnEmi').value) || 0;
+  const start = document.getElementById('lnStart').value;
+  const purpose = document.getElementById('lnPurpose').value;
+  const msg = document.getElementById('lnMsg');
+
+  if (!empId || !amount || !emi) { msg.innerHTML = '<span style="color:#f87171;">Fill all required fields</span>'; return; }
+
+  loans.push({ id: Date.now(), empId, amount, emi, start, purpose, remaining: amount, status: 'active', createdAt: new Date().toISOString() });
+  saveToLS();
+  syncToFirebase();
+  msg.innerHTML = '<span style="color:#4ade80;">✅ Loan added!</span>';
+  renderLoans();
+}
+
+function renderLoans() {
+  const tb = document.getElementById('lnTbl');
+  if (!loans.length) { tb.innerHTML = '<tr><td colspan="8" style="text-align:center;padding:20px;color:var(--text2);">No loans</td></tr>'; return; }
+  tb.innerHTML = loans.map(l => {
+    const emp = employees.find(e => String(e.empId) === String(l.empId));
+    return `<tr><td>${emp?.name || 'Emp #' + l.empId}</td><td>₹${l.amount.toLocaleString()}</td><td>₹${l.emi}/mo</td><td>${l.purpose || '—'}</td><td>${l.start}</td><td>₹${(l.remaining || l.amount).toLocaleString()}</td>
+    <td>${l.status === 'active' ? '<span class="badge b-green">Active</span>' : '<span class="badge b-gray">Closed</span>'}</td>
+    <td>${l.status === 'active' && currentUser && currentUser.role === 'admin' ? `<button class="btn btn-red btn-sm" onclick="closeLoan(${l.id})">Close</button>` : (l.status === 'active' ? '<span style="color:var(--text2);font-size:12px;">Active</span>' : '')}</td></tr>`;
+  }).join('');
+}
+
+function closeLoan(id) {
+  if (!confirm('Close this loan?')) return;
+  const l = loans.find(x => x.id === id);
+  if (l) { l.status = 'closed'; l.remaining = 0; }
+  saveToLS();
+  syncToFirebase();
+  renderLoans();
+}
+
+// ═══════════════════════════════════════════
+// PAYROLL CALCULATION
+// ═══════════════════════════════════════════
+async function getPayrollData(emp, month) {
+  const [yr, mo] = month.split('-').map(Number);
+  const daysInMonth = new Date(yr, mo, 0).getDate();
+
+  let present = 0, absent = 0, halfDay = 0, otHrs = 0, sunHolDays = 0;
+
+  for (let d = 1; d <= daysInMonth; d++) {
+    const dateStr = `${yr}-${String(mo).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+    const records = getAtt(dateStr);
+    const rec = records.find(r => String(r.empId) === String(emp.empId));
+    const isOff = isWeeklyOff(dateStr);
+    const isHol = isHoliday(dateStr);
+
+    // Sunday/Holiday లో పని చేస్తే — full hours OT గా count
+    if (isOff || isHol) {
+      sunHolDays++;
+      if (rec && rec.inTime && (rec.status === 'sunday-ot' || rec.status === 'holiday-ot')) {
+        const h = netHrs(rec.inTime, rec.outTime);
+        otHrs += h; // అన్నీ OT
+        present++; // present గా కూడా count
+      }
+      continue;
+    }
+
+    if (!rec || rec.status === 'absent') { absent++; }
+    else if (rec.status === 'half-day') { halfDay++; present += 0.5; }
+    else if (rec.status === 'paid-leave') { present++; }
+    else if (rec.status === 'unpaid-leave') { absent++; }
+    else { present++; }
+
+    if (rec && rec.inTime) {
+      const h = netHrs(rec.inTime, rec.outTime);
+      const wh = company.workHrs || 8;
+      otHrs += Math.max(0, h - wh);
+    }
+  }
+
+  const workDays = daysInMonth - sunHolDays;
+  const basic = (emp.salary / workDays) * present;
+  const da = (emp.da || 0);
+  const hra = (emp.hra || 0);
+  const med = (emp.med || 0);
+  const conv = (emp.conv || 0);
+  const otherAllow = (emp.other || 0);
+  const otPay = otHrs * (company.otRate || 100);
+
+  const earned = basic + da + hra + med + conv + otherAllow + otPay;
+  const grossSalary = emp.salary + da + hra + med + conv + otherAllow;
+
+  // Deductions
+  const esiRate = parseFloat(company.esi) || 0;
+  const pfRate = parseFloat(company.pf) || 0;
+  const esi = (grossSalary <= (company.esiLimit || 21000)) ? (earned * esiRate / 100) : 0;
+  const pf = (emp.salary <= (company.pfLimit || 15000)) ? (earned * pfRate / 100) : 0;
+  const otherDeduct = emp.deduct || 0;
+
+  // Active loan EMI
+  const activeLoan = loans.find(l => String(l.empId) === String(emp.empId) && l.status === 'active');
+  const loanEmi = activeLoan ? activeLoan.emi : 0;
+
+  const totalDeduct = esi + pf + otherDeduct + loanEmi;
+  const netPay = Math.max(0, earned - totalDeduct);
+
+  return { emp, present, absent, halfDay, otHrs, sunHolDays, workDays, basic: earned, da, hra, med, conv, otherAllow, otPay, gross: earned, esi, pf, loanEmi, otherDeduct, totalDeduct, netPay, grossSalary, activeLoan };
+}
+
+async function loadPayroll() {
+  const month = document.getElementById('prMonth').value;
+  const deptFilter = document.getElementById('prDept').value;
+  if (!month) return;
+
+  const tb = document.getElementById('prTbl');
+  tb.innerHTML = '<tr><td colspan="9" style="text-align:center;padding:20px;color:var(--text2);">⏳ Calculating payroll...</td></tr>';
+
+  let total = 0;
+  let rows = '';
+
+  const filtered = deptFilter ? employees.filter(e => e.department === deptFilter) : employees;
+
+  for (const emp of filtered) {
+    const p = await getPayrollData(emp, month);
+    total += p.netPay;
+    const [yr, mo] = month.split('-').map(Number);
+    const daysInMonth = new Date(yr, mo, 0).getDate();
+    rows += `<tr>
+      <td><b>${emp.name}</b><br><small style="color:var(--text2);">${emp.empId} • ${emp.department || ''}</small></td>
+      <td>${p.present}/${daysInMonth - p.sunHolDays}</td>
+      <td style="color:#fbbf24;">${p.otHrs.toFixed(2)}h</td>
+      <td><span style="font-size:11px;">⭐${p.sunHolDays}d<br>🎉0d</span></td>
+      <td style="color:#4ade80;">₹${p.gross.toFixed(2)}</td>
+      <td style="color:#f87171;">${p.loanEmi ? '₹' + p.loanEmi.toFixed(2) : '—'}</td>
+      <td style="color:#f87171;">₹${p.totalDeduct.toFixed(2)}</td>
+      <td style="color:var(--teal2);font-weight:800;">₹${p.netPay.toFixed(2)}</td>
+      <td>
+        <button class="btn btn-blue btn-sm" onclick="showPayslip('${emp.empId}','${month}')">💰 Payslip</button>
+        <button class="btn btn-ghost btn-sm" onclick="showAttSheet('${emp.empId}','${month}')" style="margin-top:4px;">📋 Att.Sheet</button>
+      </td>
+    </tr>`;
+  }
+
+  tb.innerHTML = rows || '<tr><td colspan="9" style="text-align:center;color:var(--text2);">No employees</td></tr>';
+  document.getElementById('prTotal').innerHTML = `Total Payroll: <span style="color:var(--teal2);">₹${total.toFixed(2)}</span>`;
+}
+
+function populateDeptFilter() {
+  const sel = document.getElementById('prDept');
+  if (sel) sel.innerHTML = '<option value="">All</option>' + departments.map(d => `<option value="${d}">${d}</option>`).join('');
+}
+
+function populateDeptFilter2() {
+  const sel = document.getElementById('rpDept');
+  if (sel) sel.innerHTML = '<option value="">All Departments</option>' + departments.map(d => `<option value="${d}">${d}</option>`).join('');
+}
+
+// ═══════════════════════════════════════════
+// PAYSLIP
+// ═══════════════════════════════════════════
+async function showPayslip(empId, month) {
+  const emp = employees.find(e => e.empId === empId);
+  if (!emp) return;
+  const p = await getPayrollData(emp, month);
+  const [yr, mo] = month.split('-').map(Number);
+  const monthName = new Date(yr, mo-1, 1).toLocaleString('default', { month: 'long' }) + ' ' + yr;
+
+  document.getElementById('payslipContent').innerHTML = `
+  <div class="payslip-print" id="psContent" style="background:white;color:#000;padding:0;font-family:'Segoe UI',Arial,sans-serif;">
+    
+    <!-- Pay Slip Title First -->
+    <div style="text-align:center;padding:10px 24px;background:#f8fafc;border-bottom:2px solid #0369a1;">
+      <div style="font-size:20px;font-weight:900;color:#000;">Pay Slip</div>
+      <div style="font-size:12px;color:#333;margin-top:1px;font-weight:600;">${monthName}</div>
+    </div>
+
+    <!-- Company Header -->
+    <div style="background:#0369a1;color:white;padding:14px 24px;text-align:center;">
+      <div style="font-size:20px;font-weight:900;letter-spacing:1px;text-transform:uppercase;">${company.name}</div>
+      <div style="font-size:12px;opacity:0.9;margin-top:4px;">📍 ${company.addr}</div>
+    </div>
+    <div style="height:4px;background:linear-gradient(90deg,#f97316,#fbbf24,#f97316);"></div>
+
+    <!-- Employee Info -->
+    <table style="width:100%;border-collapse:collapse;border:1px solid #000;font-size:12px;">
+      <tr style="background:#dbeafe;">
+        <td style="padding:6px 12px;border:1px solid #000;font-weight:700;width:25%;color:#0369a1;">Employee ID No</td>
+        <td style="padding:6px 12px;border:1px solid #000;width:20%;">${emp.empId}</td>
+        <td style="padding:6px 12px;border:1px solid #000;font-weight:700;width:25%;color:#0369a1;">Month</td>
+        <td style="padding:6px 12px;border:1px solid #000;font-weight:700;">${monthName}</td>
+      </tr>
+      <tr style="background:#ffffff;">
+        <td style="padding:6px 12px;border:1px solid #000;font-weight:700;color:#0369a1;">Employee Name</td>
+        <td style="padding:6px 12px;border:1px solid #000;font-weight:700;" colspan="3">${emp.name}</td>
+      </tr>
+      <tr style="background:#dbeafe;">
+        <td style="padding:6px 12px;border:1px solid #000;font-weight:700;color:#0369a1;">Appointment</td>
+        <td style="padding:6px 12px;border:1px solid #000;">${emp.designation || '—'}</td>
+        <td style="padding:6px 12px;border:1px solid #000;font-weight:700;color:#0369a1;">Department</td>
+        <td style="padding:6px 12px;border:1px solid #000;">${emp.department || '—'}</td>
+      </tr>
+      <tr style="background:#ffffff;">
+        <td style="padding:6px 12px;border:1px solid #000;font-weight:700;color:#0369a1;">Working Days</td>
+        <td style="padding:6px 12px;border:1px solid #000;">${p.workDays}</td>
+        <td style="padding:6px 12px;border:1px solid #000;font-weight:700;color:#0369a1;">Present Days</td>
+        <td style="padding:6px 12px;border:1px solid #000;">${p.present}</td>
+      </tr>
+      <tr style="background:#dbeafe;">
+        <td style="padding:6px 12px;border:1px solid #000;font-weight:700;color:#0369a1;">Basic Salary</td>
+        <td style="padding:6px 12px;border:1px solid #000;font-weight:700;">₹${emp.salary.toLocaleString()}.00</td>
+        <td style="padding:6px 12px;border:1px solid #000;font-weight:700;color:#0369a1;">OT Hours</td>
+        <td style="padding:6px 12px;border:1px solid #000;">${p.otHrs.toFixed(1)}h</td>
+      </tr>
+    </table>
+
+    <!-- Credits -->
+    <table style="width:100%;border-collapse:collapse;margin-top:8px;border:1px solid #000;font-size:12px;">
+      <tr><td colspan="3" style="padding:6px;text-align:center;font-weight:800;font-size:13px;background:#dbeafe;border:1px solid #000;">Credits</td></tr>
+      <tr style="background:#0369a1;color:white;">
+        <th style="padding:6px 10px;border:1px solid #000;width:12%;text-align:center;">Ser</th>
+        <th style="padding:6px 10px;border:1px solid #000;text-align:left;">Credits</th>
+        <th style="padding:6px 10px;border:1px solid #000;width:25%;text-align:right;">Amount</th>
+      </tr>
+      <tr style="background:#f0f9ff;"><td style="padding:5px 10px;border:1px solid #000;text-align:center;">1</td><td style="padding:5px 10px;border:1px solid #000;">Basic (Earned)</td><td style="padding:5px 10px;border:1px solid #000;text-align:right;color:#16a34a;font-weight:600;">₹${p.basic.toFixed(2)}</td></tr>
+      <tr style="background:#fff;"><td style="padding:5px 10px;border:1px solid #000;text-align:center;">2</td><td style="padding:5px 10px;border:1px solid #000;">Dearness Allowance</td><td style="padding:5px 10px;border:1px solid #000;text-align:right;color:#16a34a;">₹${p.da ? p.da.toFixed(2) : '0.00'}</td></tr>
+      <tr style="background:#f0f9ff;"><td style="padding:5px 10px;border:1px solid #000;text-align:center;">3</td><td style="padding:5px 10px;border:1px solid #000;">House Rent Allowance</td><td style="padding:5px 10px;border:1px solid #000;text-align:right;color:#16a34a;">₹${p.hra ? p.hra.toFixed(2) : '0.00'}</td></tr>
+      <tr style="background:#fff;"><td style="padding:5px 10px;border:1px solid #000;text-align:center;">4</td><td style="padding:5px 10px;border:1px solid #000;">Medical Allowance</td><td style="padding:5px 10px;border:1px solid #000;text-align:right;color:#16a34a;">₹${p.med ? p.med.toFixed(2) : '0.00'}</td></tr>
+      <tr style="background:#f0f9ff;"><td style="padding:5px 10px;border:1px solid #000;text-align:center;">5</td><td style="padding:5px 10px;border:1px solid #000;">Conveyance Allowance</td><td style="padding:5px 10px;border:1px solid #000;text-align:right;color:#16a34a;">₹${p.conv ? p.conv.toFixed(2) : '0.00'}</td></tr>
+      <tr style="background:#fff;"><td style="padding:5px 10px;border:1px solid #000;text-align:center;">6</td><td style="padding:5px 10px;border:1px solid #000;">Overtime Pay</td><td style="padding:5px 10px;border:1px solid #000;text-align:right;color:#16a34a;">₹${p.otPay ? p.otPay.toFixed(2) : '0.00'}</td></tr>
+      <tr style="background:#dbeafe;font-weight:800;"><td style="padding:6px 10px;border:1px solid #000;" colspan="2">Gross Salary</td><td style="padding:6px 10px;border:1px solid #000;text-align:right;color:#16a34a;">₹${p.gross.toFixed(2)}</td></tr>
+    </table>
+
+    <!-- Deductions -->
+    <table style="width:100%;border-collapse:collapse;margin-top:8px;border:1px solid #000;font-size:12px;">
+      <tr><td colspan="3" style="padding:6px;text-align:center;font-weight:800;font-size:13px;background:#fee2e2;border:1px solid #000;">Deductions</td></tr>
+      <tr style="background:#dc2626;color:white;">
+        <th style="padding:6px 10px;border:1px solid #000;width:12%;text-align:center;">Ser</th>
+        <th style="padding:6px 10px;border:1px solid #000;text-align:left;">Deduction</th>
+        <th style="padding:6px 10px;border:1px solid #000;width:25%;text-align:right;">Amount</th>
+      </tr>
+      <tr style="background:#fff1f2;"><td style="padding:5px 10px;border:1px solid #000;text-align:center;">1</td><td style="padding:5px 10px;border:1px solid #000;">ESI (${company.esi}%)</td><td style="padding:5px 10px;border:1px solid #000;text-align:right;color:#dc2626;">₹${p.esi ? p.esi.toFixed(2) : '0.00'}</td></tr>
+      <tr style="background:#fff;"><td style="padding:5px 10px;border:1px solid #000;text-align:center;">2</td><td style="padding:5px 10px;border:1px solid #000;">PF (${company.pf}%)</td><td style="padding:5px 10px;border:1px solid #000;text-align:right;color:#dc2626;">₹${p.pf ? p.pf.toFixed(2) : '0.00'}</td></tr>
+      <tr style="background:#fff1f2;"><td style="padding:5px 10px;border:1px solid #000;text-align:center;">3</td><td style="padding:5px 10px;border:1px solid #000;">Loan EMI</td><td style="padding:5px 10px;border:1px solid #000;text-align:right;color:#dc2626;">₹${p.loanEmi ? p.loanEmi.toFixed(2) : '0.00'}</td></tr>
+      <tr style="background:#fff;"><td style="padding:5px 10px;border:1px solid #000;text-align:center;">4</td><td style="padding:5px 10px;border:1px solid #000;">Other Deductions</td><td style="padding:5px 10px;border:1px solid #000;text-align:right;color:#dc2626;">₹${p.otherDeduct ? p.otherDeduct.toFixed(2) : '0.00'}</td></tr>
+      <tr style="background:#fee2e2;font-weight:800;"><td style="padding:6px 10px;border:1px solid #000;" colspan="2">Total Deductions</td><td style="padding:6px 10px;border:1px solid #000;text-align:right;color:#dc2626;">₹${p.totalDeduct.toFixed(2)}</td></tr>
+    </table>
+
+    <!-- Net Salary -->
+    <table style="width:100%;border-collapse:collapse;margin-top:8px;border:1px solid #000;font-size:13px;">
+      <tr style="background:#0369a1;color:white;">
+        <td style="padding:10px 14px;font-weight:800;font-size:14px;border:1px solid #000;">Net Salary</td>
+        <td style="padding:10px 14px;font-weight:900;font-size:16px;text-align:right;border:1px solid #000;">₹${p.netPay.toFixed(2)}</td>
+      </tr>
+    </table>
+
+    <!-- Signature -->
+    <table style="width:100%;border-collapse:collapse;margin-top:10px;border:1px solid #000;font-size:12px;">
+      <tr>
+        <td style="padding:30px 14px 8px;border:1px solid #000;text-align:center;font-weight:700;">Employee Signature</td>
+        <td style="padding:30px 14px 8px;border:1px solid #000;text-align:center;font-weight:700;">Authorized Signature</td>
+      </tr>
+    </table>
+
+    <div style="text-align:center;font-size:10px;color:#64748b;padding:6px;">
+      This is a computer generated payslip and does not require signature — ${company.name}
+    </div>
+  </div>`;
+
+    <!-- Credits Section -->
+    <table style="width:100%;border-collapse:collapse;margin-top:12px;border:1px solid #000;">
+      <tr>
+        <td colspan="3" style="padding:8px;text-align:center;font-weight:800;font-size:14px;background:#dbeafe;border:1px solid #000;">Credits</td>
+      </tr>
+      <tr style="background:#0369a1;color:white;">
+        <th style="padding:8px 12px;border:1px solid #000;width:15%;text-align:center;">Ser</th>
+        <th style="padding:8px 12px;border:1px solid #000;text-align:left;">Credits</th>
+        <th style="padding:8px 12px;border:1px solid #000;width:25%;text-align:right;">Amount</th>
+      </tr>
+      <tr style="background:#f0f9ff;">
+        <td style="padding:7px 12px;border:1px solid #000;text-align:center;">1</td>
+        <td style="padding:7px 12px;border:1px solid #000;">Basic (Earned)</td>
+        <td style="padding:7px 12px;border:1px solid #000;text-align:right;color:#16a34a;font-weight:600;">₹${p.basic.toFixed(2)}</td>
+      </tr>
+      <tr style="background:#ffffff;">
+        <td style="padding:7px 12px;border:1px solid #000;text-align:center;">2</td>
+        <td style="padding:7px 12px;border:1px solid #000;">Dearness Allowance</td>
+        <td style="padding:7px 12px;border:1px solid #000;text-align:right;color:#16a34a;">₹${p.da ? p.da.toFixed(2) : '0.00'}</td>
+      </tr>
+      <tr style="background:#f0f9ff;">
+        <td style="padding:7px 12px;border:1px solid #000;text-align:center;">3</td>
+        <td style="padding:7px 12px;border:1px solid #000;">House Rent Allowance</td>
+        <td style="padding:7px 12px;border:1px solid #000;text-align:right;color:#16a34a;">₹${p.hra ? p.hra.toFixed(2) : '0.00'}</td>
+      </tr>
+      <tr style="background:#ffffff;">
+        <td style="padding:7px 12px;border:1px solid #000;text-align:center;">4</td>
+        <td style="padding:7px 12px;border:1px solid #000;">Medical Allowance</td>
+        <td style="padding:7px 12px;border:1px solid #000;text-align:right;color:#16a34a;">₹${p.med ? p.med.toFixed(2) : '0.00'}</td>
+      </tr>
+      <tr style="background:#f0f9ff;">
+        <td style="padding:7px 12px;border:1px solid #000;text-align:center;">5</td>
+        <td style="padding:7px 12px;border:1px solid #000;">Conveyance Allowance</td>
+        <td style="padding:7px 12px;border:1px solid #000;text-align:right;color:#16a34a;">₹${p.conv ? p.conv.toFixed(2) : '0.00'}</td>
+      </tr>
+      <tr style="background:#ffffff;">
+        <td style="padding:7px 12px;border:1px solid #000;text-align:center;">6</td>
+        <td style="padding:7px 12px;border:1px solid #000;">Overtime Pay</td>
+        <td style="padding:7px 12px;border:1px solid #000;text-align:right;color:#16a34a;">₹${p.otPay ? p.otPay.toFixed(2) : '0.00'}</td>
+      </tr>
+      <tr style="background:#dbeafe;font-weight:800;">
+        <td style="padding:8px 12px;border:1px solid #000;" colspan="2">Gross Salary</td>
+        <td style="padding:8px 12px;border:1px solid #000;text-align:right;color:#16a34a;">₹${p.gross.toFixed(2)}</td>
+      </tr>
+    </table>
+
+    <!-- Deductions Section -->
+    <table style="width:100%;border-collapse:collapse;margin-top:12px;border:1px solid #000;">
+      <tr>
+        <td colspan="3" style="padding:8px;text-align:center;font-weight:800;font-size:14px;background:#fee2e2;border:1px solid #000;">Deductions</td>
+      </tr>
+      <tr style="background:#dc2626;color:white;">
+        <th style="padding:8px 12px;border:1px solid #000;width:15%;text-align:center;">Ser</th>
+        <th style="padding:8px 12px;border:1px solid #000;text-align:left;">Deduction</th>
+        <th style="padding:8px 12px;border:1px solid #000;width:25%;text-align:right;">Amount</th>
+      </tr>
+      <tr style="background:#fff1f2;">
+        <td style="padding:7px 12px;border:1px solid #000;text-align:center;">1</td>
+        <td style="padding:7px 12px;border:1px solid #000;">ESI (${company.esi}%)</td>
+        <td style="padding:7px 12px;border:1px solid #000;text-align:right;color:#dc2626;">₹${p.esi ? p.esi.toFixed(2) : '0.00'}</td>
+      </tr>
+      <tr style="background:#ffffff;">
+        <td style="padding:7px 12px;border:1px solid #000;text-align:center;">2</td>
+        <td style="padding:7px 12px;border:1px solid #000;">PF (${company.pf}%)</td>
+        <td style="padding:7px 12px;border:1px solid #000;text-align:right;color:#dc2626;">₹${p.pf ? p.pf.toFixed(2) : '0.00'}</td>
+      </tr>
+      <tr style="background:#fff1f2;">
+        <td style="padding:7px 12px;border:1px solid #000;text-align:center;">3</td>
+        <td style="padding:7px 12px;border:1px solid #000;">Loan EMI</td>
+        <td style="padding:7px 12px;border:1px solid #000;text-align:right;color:#dc2626;">₹${p.loanEmi ? p.loanEmi.toFixed(2) : '0.00'}</td>
+      </tr>
+      <tr style="background:#ffffff;">
+        <td style="padding:7px 12px;border:1px solid #000;text-align:center;">4</td>
+        <td style="padding:7px 12px;border:1px solid #000;">Other Deductions</td>
+        <td style="padding:7px 12px;border:1px solid #000;text-align:right;color:#dc2626;">₹${p.otherDeduct ? p.otherDeduct.toFixed(2) : '0.00'}</td>
+      </tr>
+      <tr style="background:#fee2e2;font-weight:800;">
+        <td style="padding:8px 12px;border:1px solid #000;" colspan="2">Total Deductions</td>
+        <td style="padding:8px 12px;border:1px solid #000;text-align:right;color:#dc2626;">₹${p.totalDeduct.toFixed(2)}</td>
+      </tr>
+    </table>
+
+    <!-- Net Salary -->
+    <table style="width:100%;border-collapse:collapse;margin-top:12px;border:1px solid #000;">
+      <tr style="background:#0369a1;color:white;">
+        <td style="padding:12px 16px;font-weight:800;font-size:15px;border:1px solid #000;">Net Salary</td>
+        <td style="padding:12px 16px;font-weight:900;font-size:18px;text-align:right;border:1px solid #000;">₹${p.netPay.toFixed(2)}</td>
+      </tr>
+    </table>
+
+    <!-- Signature -->
+    <table style="width:100%;border-collapse:collapse;margin-top:16px;border:1px solid #000;">
+      <tr>
+        <td style="padding:40px 16px 10px;border:1px solid #000;text-align:center;font-weight:600;font-size:12px;">Employee Signature</td>
+        <td style="padding:40px 16px 10px;border:1px solid #000;text-align:center;font-weight:600;font-size:12px;">Authorized Signature</td>
+      </tr>
+    </table>
+
+    <div style="text-align:center;font-size:10px;color:#64748b;padding:10px;">
+      This is a computer generated payslip and does not require signature — ${company.name}
+    </div>
+  </div>`;
+
+  openModal('payslipModal');
+
+  // Save to history
+  const hist = LS.get('payHistory') || [];
+  if (!hist.find(h => h.empId === empId && h.month === month)) {
+    hist.push({ empId, month, netPay: p.netPay, gross: p.gross, deductions: p.totalDeduct, present: p.present, otHrs: p.otHrs, savedAt: new Date().toISOString() });
+    LS.set('payHistory', hist);
+  }
+}
+
+function printPayslip() {
+  const content = document.getElementById('psContent').innerHTML;
+  const win = window.open('', '_blank');
+  win.document.write(`<html><head><title>Payslip</title><style>
+    @page { size: A4; margin: 10mm; }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Segoe UI', Arial, sans-serif; color: #000; background: white; font-size: 12px; }
+    table { width: 100%; border-collapse: collapse; }
+    td, th { border: 1px solid #000; padding: 5px 10px; }
+  </style></head><body>${content}</body></html>`);
+  win.document.close();
+  win.print();
+}
+
+// ═══════════════════════════════════════════
+// ATTENDANCE SHEET
+// ═══════════════════════════════════════════
+async function showAttSheet(empId, month) {
+  const emp = employees.find(e => e.empId === empId);
+  if (!emp) return;
+
+  const [yr, mo] = month.split('-').map(Number);
+  const daysInMonth = new Date(yr, mo, 0).getDate();
+  const monthName = new Date(yr, mo-1, 1).toLocaleString('default', { month: 'long' }) + ' ' + yr;
+
+  let present = 0, absent = 0, halfDay = 0, paidLeave = 0, unpaidLop = 0, paidSunHol = 0, otDays = 0;
+  let rows = '';
+  const dayNames = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+
+  for (let d = 1; d <= daysInMonth; d++) {
+    const dateStr = `${yr}-${String(mo).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+    const dayName = dayNames[new Date(dateStr).getDay()];
+    const records = getAtt(dateStr);
+    const rec = records.find(r => String(r.empId) === String(emp.empId));
+    const isOff = isWeeklyOff(dateStr);
+    const isHol = isHoliday(dateStr);
+    const holName = getHolidayName(dateStr);
+
+    let status = '', note = '', statusClass = '';
+    if (isHol) { status = holName; note = holName; statusClass = 'as-holiday'; paidSunHol++; }
+    else if (isOff) { status = dayName; note = 'Week Off'; statusClass = 'as-sunday'; }
+    else if (!rec || rec.status === 'absent') { status = 'Absent'; statusClass = 'as-absent'; absent++; }
+    else if (rec.status === 'paid-leave') { status = 'Paid Leave'; statusClass = 'as-present'; paidLeave++; present++; }
+    else if (rec.status === 'unpaid-leave') { status = 'Unpaid LOP'; statusClass = 'as-absent'; unpaidLop++; absent++; }
+    else if (rec.status === 'half-day') { status = 'Half Day'; statusClass = 'as-halfday'; halfDay++; present += 0.5; }
+    else { status = 'Present'; statusClass = 'as-present'; present++; }
+
+    const h = rec ? netHrs(rec.inTime, rec.outTime) : 0;
+    const wh = company.workHrs || 8;
+    const ot = Math.max(0, h - wh);
+    if (ot > 0) otDays++;
+
+    rows += `<tr>
+      <td>${d}</td><td>${dayName}</td>
+      <td style="color:#16a34a;">${rec?.inTime ? fmt(rec.inTime) : '—'}</td>
+      <td style="color:#f59e0b;">${rec?.outTime ? fmt(rec.outTime) : '—'}</td>
+      <td>${h > 0 ? h.toFixed(1) + 'h' : '—'}</td>
+      <td>${ot > 0 ? ot.toFixed(1) + 'h' : '—'}</td>
+      <td><span class="${statusClass}">${status}</span></td>
+      <td>${note}</td>
+    </tr>`;
+  }
+
+  const workDays = daysInMonth - (isWeeklyOff ? paidSunHol : 0);
+
+  document.getElementById('attSheetContent').innerHTML = `
+  <div class="att-sheet" id="attSheetPrint">
+    <div class="as-header">
+      <div>
+        <div class="as-company">${company.name}</div>
+        <div class="as-sub">${company.addr}</div>
+      </div>
+      <div class="as-title">ATTENDANCE SHEET<br>${monthName}</div>
+    </div>
+    <div class="as-emp-grid">
+      <div class="as-emp-field"><div class="as-emp-label">Employee ID</div><div class="as-emp-val">${emp.empId}</div></div>
+      <div class="as-emp-field"><div class="as-emp-label">Name</div><div class="as-emp-val">${emp.name}</div></div>
+      <div class="as-emp-field"><div class="as-emp-label">Designation</div><div class="as-emp-val">${emp.designation || '—'}</div></div>
+      <div class="as-emp-field"><div class="as-emp-label">Department</div><div class="as-emp-val">${emp.department || '—'}</div></div>
+      <div class="as-emp-field"><div class="as-emp-label">Month</div><div class="as-emp-val">${monthName}</div></div>
+    </div>
+    <div class="as-stats-row">
+      <div class="as-stat-box"><div class="as-stat-val">${daysInMonth}</div><div class="as-stat-lbl">Total Days</div></div>
+      <div class="as-stat-box"><div class="as-stat-val" style="color:#16a34a;">${present}</div><div class="as-stat-lbl">Present</div></div>
+      <div class="as-stat-box"><div class="as-stat-val" style="color:#dc2626;">${absent}</div><div class="as-stat-lbl">Absent</div></div>
+      <div class="as-stat-box"><div class="as-stat-val" style="color:#7c3aed;">${halfDay}</div><div class="as-stat-lbl">Half Day</div></div>
+      <div class="as-stat-box"><div class="as-stat-val" style="color:#0d9488;">${paidLeave}</div><div class="as-stat-lbl">Paid Leave</div></div>
+      <div class="as-stat-box"><div class="as-stat-val" style="color:#dc2626;">${unpaidLop}</div><div class="as-stat-lbl">Unpaid LOP</div></div>
+      <div class="as-stat-box"><div class="as-stat-val" style="color:#1e40af;">${paidSunHol}</div><div class="as-stat-lbl">Sun/Hol</div></div>
+      <div class="as-stat-box"><div class="as-stat-val" style="color:#d97706;">${otDays}</div><div class="as-stat-lbl">OT Days</div></div>
+      <div class="as-stat-box"><div class="as-stat-val">0.0h</div><div class="as-stat-lbl">Total OT</div></div>
+    </div>
+    <table class="as-table"><thead><tr><th>#</th><th>Day</th><th>In Time</th><th>Out Time</th><th>Net Hrs</th><th>OT Hrs</th><th>Status</th><th>Note</th></tr></thead>
+    <tbody>${rows}</tbody></table>
+  </div>`;
+
+  openModal('attSheetModal');
+}
+
+function printAttSheet() {
+  const content = document.getElementById('attSheetPrint').outerHTML;
+  const win = window.open('', '_blank');
+  win.document.write(`<html><head><title>Attendance Sheet</title><style>
+    body{font-family:'Segoe UI',sans-serif;margin:16px;color:#1e293b;font-size:12px;}
+    .att-sheet{max-width:100%;}
+    .as-header{background:#1e3a5f;color:white;padding:12px 16px;border-radius:8px;margin-bottom:12px;display:flex;justify-content:space-between;}
+    .as-company{font-size:14px;font-weight:800;} .as-sub{font-size:10px;opacity:0.7;} .as-title{font-size:11px;font-weight:600;text-align:right;color:#93c5fd;}
+    .as-emp-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin-bottom:10px;}
+    .as-emp-field{background:#f8fafc;border-radius:4px;padding:6px 8px;} .as-emp-label{font-size:9px;color:#64748b;text-transform:uppercase;} .as-emp-val{font-size:12px;font-weight:700;}
+    .as-stats-row{display:grid;grid-template-columns:repeat(9,1fr);gap:4px;margin-bottom:10px;}
+    .as-stat-box{background:#eff6ff;border-radius:4px;padding:5px;text-align:center;} .as-stat-val{font-size:13px;font-weight:800;color:#1e40af;} .as-stat-lbl{font-size:8px;color:#64748b;}
+    .as-table{width:100%;border-collapse:collapse;font-size:11px;} .as-table th{background:#1e3a5f;color:white;padding:5px 6px;text-align:left;}
+    .as-table td{padding:4px 6px;border-bottom:1px solid #f1f5f9;}
+    .as-present{background:#dcfce7;color:#166534;padding:1px 5px;border-radius:3px;font-size:10px;font-weight:600;}
+    .as-absent{background:#fee2e2;color:#991b1b;padding:1px 5px;border-radius:3px;font-size:10px;font-weight:600;}
+    .as-sunday{background:#dbeafe;color:#1e40af;padding:1px 5px;border-radius:3px;font-size:10px;font-weight:600;}
+    .as-holiday{background:#fef3c7;color:#92400e;padding:1px 5px;border-radius:3px;font-size:10px;font-weight:600;}
+    .as-halfday{background:#f3e8ff;color:#6b21a8;padding:1px 5px;border-radius:3px;font-size:10px;font-weight:600;}
+  </style></head><body>${content}</body></html>`);
+  win.document.close();
+  win.print();
+}
+
+// ═══════════════════════════════════════════
+// REPORTS
+// ═══════════════════════════════════════════
+async function printMonthlySalary() {
+  const month = document.getElementById('rpMonth').value;
+  if (!month) { alert('Select month'); return; }
+  const [yr, mo] = month.split('-').map(Number);
+  const monthName = new Date(yr, mo-1, 1).toLocaleString('default', { month: 'long' }) + ' ' + yr;
+  let rows = '', total = 0;
+
+  for (const emp of employees) {
+    const p = await getPayrollData(emp, month);
+    total += p.netPay;
+    rows += `<tr><td>${emp.empId}</td><td>${emp.name}</td><td>${emp.designation||'—'}</td><td>${emp.department||'—'}</td><td>${p.present}</td><td>₹${p.gross.toFixed(2)}</td><td>₹${p.totalDeduct.toFixed(2)}</td><td><b>₹${p.netPay.toFixed(2)}</b></td></tr>`;
+  }
+
+  const win = window.open('', '_blank');
+  win.document.write(`<html><head><title>Salary Report</title><style>
+    body{font-family:'Segoe UI',sans-serif;margin:20px;color:#1e293b;}
+    h2{color:#1e3a5f;} table{width:100%;border-collapse:collapse;font-size:13px;}
+    th{background:#1e3a5f;color:white;padding:8px 10px;text-align:left;}
+    td{padding:7px 10px;border-bottom:1px solid #f1f5f9;}
+    .total{font-size:15px;font-weight:800;color:#1e40af;text-align:right;padding:12px 0;}
+  </style></head><body>
+    <h2>${company.name}</h2><p>${company.addr}</p><hr>
+    <h3>Monthly Salary Report — ${monthName}</h3>
+    <table><thead><tr><th>ID</th><th>Name</th><th>Designation</th><th>Dept</th><th>Present</th><th>Gross</th><th>Deductions</th><th>Net Pay</th></tr></thead>
+    <tbody>${rows}</tbody></table>
+    <div class="total">Total Payroll: ₹${total.toFixed(2)}</div>
+  </body></html>`);
+  win.document.close();
+  win.print();
+}
+
+async function printAttRegister() {
+  const month = document.getElementById('rpMonth').value;
+  if (!month) { alert('Select month'); return; }
+  const [yr, mo] = month.split('-').map(Number);
+  const daysInMonth = new Date(yr, mo, 0).getDate();
+  const monthName = new Date(yr, mo-1, 1).toLocaleString('default', { month: 'long' }) + ' ' + yr;
+
+  let headers = '<th>Employee</th>';
+  for (let d = 1; d <= daysInMonth; d++) headers += `<th>${d}</th>`;
+  headers += '<th>P</th><th>A</th>';
+
+  let rows = '';
+  for (const emp of employees) {
+    let row = `<td><b>${emp.name}</b></td>`;
+    let p = 0, a = 0;
+    for (let d = 1; d <= daysInMonth; d++) {
+      const dateStr = `${yr}-${String(mo).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+      const records = getAtt(dateStr);
+      const rec = records.find(r => String(r.empId) === String(emp.empId));
+      const isOff = isWeeklyOff(dateStr);
+      const isHol = isHoliday(dateStr);
+
+      let cell = '', color = '';
+      if (isHol) { cell = 'H'; color = '#fef3c7'; }
+      else if (isOff) { cell = 'S'; color = '#dbeafe'; }
+      else if (!rec || rec.status === 'absent') { cell = 'A'; color = '#fee2e2'; a++; }
+      else if (rec.status === 'half-day') { cell = '½'; color = '#f3e8ff'; p += 0.5; }
+      else { cell = 'P'; color = '#dcfce7'; p++; }
+      row += `<td style="background:${color};text-align:center;font-size:11px;font-weight:700;">${cell}</td>`;
+    }
+    row += `<td style="color:#16a34a;font-weight:700;">${p}</td><td style="color:#dc2626;font-weight:700;">${a}</td>`;
+    rows += `<tr>${row}</tr>`;
+  }
+
+  const win = window.open('', '_blank');
+  win.document.write(`<html><head><title>Attendance Register</title><style>
+    body{font-family:'Segoe UI',sans-serif;margin:16px;font-size:11px;}
+    table{border-collapse:collapse;width:100%;} th{background:#1e3a5f;color:white;padding:5px 4px;font-size:10px;}
+    td{padding:4px;border:1px solid #e2e8f0;}
+  </style></head><body>
+    <h3>${company.name} — Attendance Register — ${monthName}</h3>
+    <table><thead><tr>${headers}</tr></thead><tbody>${rows}</tbody></table>
+  </body></html>`);
+  win.document.close();
+  win.print();
+}
+
+async function printBankSheet() {
+  const month = document.getElementById('rpMonth').value;
+  if (!month) { alert('Select month'); return; }
+  const [yr, mo] = month.split('-').map(Number);
+  const monthName = new Date(yr, mo-1, 1).toLocaleString('default', { month: 'long' }) + ' ' + yr;
+
+  let rows = '', total = 0, sno = 1;
+  for (const emp of employees) {
+    const p = await getPayrollData(emp, month);
+    total += p.netPay;
+    rows += `<tr><td>${sno++}</td><td>${emp.empId}</td><td>${emp.name}</td><td>${emp.department||'—'}</td><td>${emp.phone||'—'}</td><td><b>₹${p.netPay.toFixed(2)}</b></td><td style="width:100px;border-bottom:1px solid #ccc;"></td></tr>`;
+  }
+
+  const win = window.open('', '_blank');
+  win.document.write(`<html><head><title>Bank Transfer Sheet</title><style>
+    body{font-family:'Segoe UI',sans-serif;margin:20px;} table{width:100%;border-collapse:collapse;font-size:13px;}
+    th{background:#1e3a5f;color:white;padding:8px;} td{padding:7px 8px;border-bottom:1px solid #f1f5f9;}
+  </style></head><body>
+    <h2>${company.name} — Bank Transfer Sheet — ${monthName}</h2>
+    <table><thead><tr><th>S.No</th><th>Emp ID</th><th>Name</th><th>Dept</th><th>Phone</th><th>Net Salary</th><th>Signature</th></tr></thead>
+    <tbody>${rows}</tbody></table>
+    <p style="text-align:right;font-weight:800;margin-top:12px;">Total: ₹${total.toFixed(2)}</p>
+  </body></html>`);
+  win.document.close();
+  win.print();
+}
+
+async function printDeptReport() {
+  const month = document.getElementById('rpMonth').value;
+  if (!month) { alert('Select month'); return; }
+  const [yr, mo] = month.split('-').map(Number);
+  const monthName = new Date(yr, mo-1, 1).toLocaleString('default', { month: 'long' }) + ' ' + yr;
+
+  const deptMap = {};
+  for (const emp of employees) {
+    const d = emp.department || 'Other';
+    if (!deptMap[d]) deptMap[d] = { count: 0, total: 0 };
+    const p = await getPayrollData(emp, month);
+    deptMap[d].count++;
+    deptMap[d].total += p.netPay;
+  }
+
+  let rows = '';
+  Object.entries(deptMap).forEach(([dept, data]) => {
+    rows += `<tr><td>${dept}</td><td>${data.count}</td><td><b>₹${data.total.toFixed(2)}</b></td></tr>`;
+  });
+
+  const win = window.open('', '_blank');
+  win.document.write(`<html><head><title>Dept Report</title><style>
+    body{font-family:'Segoe UI',sans-serif;margin:20px;} table{width:100%;border-collapse:collapse;font-size:14px;}
+    th{background:#1e3a5f;color:white;padding:10px;} td{padding:9px;border-bottom:1px solid #f1f5f9;}
+  </style></head><body>
+    <h2>${company.name} — Department Report — ${monthName}</h2>
+    <table><thead><tr><th>Department</th><th>Employees</th><th>Total Payroll</th></tr></thead><tbody>${rows}</tbody></table>
+  </body></html>`);
+  win.document.close();
+  win.print();
+}
+
+// ═══════════════════════════════════════════
+// HISTORY
+// ═══════════════════════════════════════════
+function loadHistory() {
+  const hist = LS.get('payHistory') || [];
+  const div = document.getElementById('historyContent');
+
+  if (!hist.length) {
+    div.innerHTML = '<div style="text-align:center;padding:40px;color:var(--text2);">No payslip history yet. Generate payslips from Payroll section.</div>';
+    return;
+  }
+
+  const byYear = {};
+  hist.forEach(h => {
+    const yr = h.month.split('-')[0];
+    if (!byYear[yr]) byYear[yr] = {};
+    const emp = employees.find(e => e.empId === h.empId);
+    const empName = emp?.name || 'Emp #' + h.empId;
+    if (!byYear[yr][empName]) byYear[yr][empName] = [];
+    byYear[yr][empName].push(h);
+  });
+
+  let html = '';
+  Object.entries(byYear).sort((a,b) => b[0]-a[0]).forEach(([yr, emps]) => {
+    html += `<div class="card"><div class="card-title">📅 Year ${yr}</div>`;
+    Object.entries(emps).forEach(([empName, records]) => {
+      const total = records.reduce((s,r) => s + r.netPay, 0);
+      html += `<div style="margin-bottom:12px;"><div style="font-size:14px;font-weight:700;margin-bottom:8px;">👤 ${empName} <span style="font-size:12px;color:var(--text2);">Year Total: ₹${total.toFixed(2)}</span></div>
+      <div class="tbl-wrap"><table><thead><tr><th>Month</th><th>Present</th><th>OT Hrs</th><th>Basic Salary</th><th>Gross</th><th>Deductions</th><th>Net Pay</th><th>Action</th></tr></thead><tbody>`;
+      records.sort((a,b) => a.month.localeCompare(b.month)).forEach(r => {
+        const [yrr, mo] = r.month.split('-').map(Number);
+        const mName = new Date(yrr, mo-1, 1).toLocaleString('default', { month: 'long' });
+        const emp = employees.find(e => e.empId === r.empId);
+        html += `<tr><td>${mName} ${yrr}</td><td>${r.present||0}/30</td><td>${(r.otHrs||0).toFixed(2)}h</td><td>₹${(emp?.salary||0).toLocaleString()}.00</td><td>₹${(r.gross||0).toFixed(2)}</td><td>₹${(r.deductions||0).toFixed(2)}</td><td style="color:var(--teal2);font-weight:700;">₹${r.netPay.toFixed(2)}</td>
+        <td><button class="btn btn-blue btn-sm" onclick="showPayslip('${r.empId}','${r.month}')">🖨️ Re-print</button></td></tr>`;
+      });
+      html += '</tbody></table></div></div>';
+    });
+    html += '</div>';
+  });
+  div.innerHTML = html;
+}
+
+// ═══════════════════════════════════════════
+// HOLIDAYS
+// ═══════════════════════════════════════════
+function addHoliday() {
+  const date = document.getElementById('holDate').value;
+  const name = document.getElementById('holName').value.trim();
+  if (!date || !name) { alert('Enter date and holiday name'); return; }
+  if (holidays.find(h => h.date === date)) { alert('Holiday already exists for this date'); return; }
+  holidays.push({ date, name });
+  holidays.sort((a,b) => a.date.localeCompare(b.date));
+  saveToLS();
+  syncToFirebase();
+  renderHolidays();
+  document.getElementById('holDate').value = '';
+  document.getElementById('holName').value = '';
+}
+
+function renderHolidays() {
+  document.getElementById('holCount').textContent = `Holidays (${holidays.length})`;
+  const div = document.getElementById('holList');
+  div.innerHTML = holidays.map(h => {
+    const d = new Date(h.date);
+    const dayName = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'][d.getDay()];
+    return `<div style="display:flex;align-items:center;justify-content:space-between;padding:12px 14px;background:rgba(255,255,255,0.04);border:1px solid var(--border);border-radius:8px;margin-bottom:6px;">
+      <div><div style="font-size:14px;font-weight:600;">${h.name}</div><div style="font-size:12px;color:var(--text2);margin-top:2px;">${h.date} • ${dayName}</div></div>
+      <button class="btn btn-red btn-sm" onclick="deleteHoliday('${h.date}')">✕</button>
+    </div>`;
+  }).join('') || '<div style="color:var(--text2);text-align:center;padding:20px;">No holidays added</div>';
+}
+
+function deleteHoliday(date) {
+  holidays = holidays.filter(h => h.date !== date);
+  saveToLS();
+  syncToFirebase();
+  renderHolidays();
+}
+
+// ═══════════════════════════════════════════
+// DEPT & DESIG
+// ═══════════════════════════════════════════
+function renderDeptDesig() {
+  document.getElementById('deptCount').textContent = departments.length;
+  document.getElementById('desigCount').textContent = designations.length;
+
+  document.getElementById('deptList').innerHTML = departments.map(d => {
+    const count = employees.filter(e => e.department === d).length;
+    return `<div style="display:flex;align-items:center;justify-content:space-between;padding:10px 12px;background:rgba(255,255,255,0.04);border:1px solid var(--border);border-radius:8px;margin-bottom:5px;">
+      <span>${d} <span style="color:var(--text2);font-size:11px;">${count} emp</span></span>
+      <button class="btn btn-red btn-sm" onclick="deleteDept('${d}')">🗑️</button>
+    </div>`;
+  }).join('');
+
+  document.getElementById('desigList').innerHTML = designations.map(d => {
+    const count = employees.filter(e => e.designation === d).length;
+    return `<div style="display:flex;align-items:center;justify-content:space-between;padding:10px 12px;background:rgba(255,255,255,0.04);border:1px solid var(--border);border-radius:8px;margin-bottom:5px;">
+      <span>${d} <span style="color:var(--text2);font-size:11px;">${count} emp</span></span>
+      <button class="btn btn-red btn-sm" onclick="deleteDesig('${d}')">🗑️</button>
+    </div>`;
+  }).join('');
+}
+
+function addDept() {
+  const v = document.getElementById('newDept').value.trim().toUpperCase();
+  if (!v || departments.includes(v)) return;
+  departments.push(v);
+  saveToLS();
+  syncToFirebase();
+  renderDeptDesig();
+  document.getElementById('newDept').value = '';
+}
+
+function deleteDept(d) {
+  if (employees.some(e => e.department === d)) { alert('Cannot delete: employees exist in this department'); return; }
+  departments = departments.filter(x => x !== d);
+  saveToLS();
+  syncToFirebase();
+  renderDeptDesig();
+}
+
+function addDesig() {
+  const v = document.getElementById('newDesig').value.trim();
+  if (!v || designations.includes(v)) return;
+  designations.push(v);
+  saveToLS();
+  syncToFirebase();
+  renderDeptDesig();
+  document.getElementById('newDesig').value = '';
+}
+
+function deleteDesig(d) {
+  if (employees.some(e => e.designation === d)) { alert('Cannot delete: employees have this designation'); return; }
+  designations = designations.filter(x => x !== d);
+  saveToLS();
+  syncToFirebase();
+  renderDeptDesig();
+}
+
+// ═══════════════════════════════════════════
+// COMPANY SETTINGS
+// ═══════════════════════════════════════════
+function loadCompanySettings() {
+  document.getElementById('cName').value = company.name;
+  document.getElementById('cAddr').value = company.addr;
+  document.getElementById('cPhone').value = company.phone;
+  document.getElementById('cEmail').value = company.email;
+  document.getElementById('cWeekOff').value = company.weekOff;
+  document.getElementById('cWorkHrs').value = company.workHrs;
+  document.getElementById('cOtRate').value = company.otRate;
+  document.getElementById('cLateCutoff').value = company.lateCutoff;
+  document.getElementById('cPf').value = company.pf;
+  document.getElementById('cEsi').value = company.esi;
+  document.getElementById('cEsiLimit').value = company.esiLimit;
+  document.getElementById('cPfLimit').value = company.pfLimit;
+}
+
+function saveCompany() {
+  company = {
+    name: document.getElementById('cName').value,
+    addr: document.getElementById('cAddr').value,
+    phone: document.getElementById('cPhone').value,
+    email: document.getElementById('cEmail').value,
+    weekOff: document.getElementById('cWeekOff').value,
+    workHrs: parseFloat(document.getElementById('cWorkHrs').value) || 8,
+    otRate: parseFloat(document.getElementById('cOtRate').value) || 100,
+    lateCutoff: document.getElementById('cLateCutoff').value,
+    pf: document.getElementById('cPf').value,
+    esi: document.getElementById('cEsi').value,
+    esiLimit: parseFloat(document.getElementById('cEsiLimit').value) || 21000,
+    pfLimit: parseFloat(document.getElementById('cPfLimit').value) || 15000
+  };
+  saveToLS();
+  syncToFirebase();
+  document.getElementById('cMsg').innerHTML = '<span style="color:#4ade80;">✅ Settings saved!</span>';
+  setTimeout(() => document.getElementById('cMsg').innerHTML = '', 2000);
+}
+
+// ═══════════════════════════════════════════
+// BACKUP / RESTORE
+// ═══════════════════════════════════════════
+function downloadBackup() {
+  const data = {
+    employees, departments, designations, holidays, loans, company,
+    payHistory: LS.get('payHistory') || [],
+    leaves: LS.get('leaves') || [],
+    exportedAt: new Date().toISOString(),
+    version: '2.0'
+  };
+  const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `praba-hr-backup-${today()}.json`;
+  a.click();
+}
+
+function restoreBackup(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    try {
+      const data = JSON.parse(e.target.result);
+      if (data.employees) { employees = data.employees; LS.set('employees', employees); }
+      if (data.departments) { departments = data.departments; LS.set('departments', departments); }
+      if (data.designations) { designations = data.designations; LS.set('designations', designations); }
+      if (data.holidays) { holidays = data.holidays; LS.set('holidays', holidays); }
+      if (data.loans) { loans = data.loans; LS.set('loans', loans); }
+      if (data.company) { company = data.company; LS.set('company', company); }
+      if (data.payHistory) LS.set('payHistory', data.payHistory);
+      if (data.leaves) LS.set('leaves', data.leaves);
+      syncToFirebase();
+      alert('✅ Backup restored successfully!');
+      refreshCurrentPage();
+    } catch(err) {
+      alert('❌ Invalid backup file');
+    }
+  };
+  reader.readAsText(file);
+}
+
+function triggerLoginLogoUpload() {
+  document.getElementById('loginLogoInput').click();
+}
+
+function handleLoginLogoUpload(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    const dataUrl = e.target.result;
+    document.getElementById('loginDefaultLogo').style.display = 'none';
+    const img = document.getElementById('loginCustomLogo');
+    img.src = dataUrl;
+    img.style.display = 'block';
+    try { localStorage.setItem('phr_logo', dataUrl); } catch(e) {}
+    // Also update sidebar logo
+    loadSavedLogo();
+  };
+  reader.readAsDataURL(file);
+}
+
+function loadSavedLogoLogin() {
+  try {
+    const saved = localStorage.getItem('phr_logo');
+    if (saved) {
+      const def = document.getElementById('loginDefaultLogo');
+      const img = document.getElementById('loginCustomLogo');
+      if (def) def.style.display = 'none';
+      if (img) { img.src = saved; img.style.display = 'block'; }
+    }
+  } catch(e) {}
+}
+
+function triggerLogoUpload() {
+  document.getElementById('logoUploadInput').click();
+}
+
+function handleLogoUpload(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    const dataUrl = e.target.result;
+    // Show custom logo, hide SVG
+    document.getElementById('defaultLogo').style.display = 'none';
+    const img = document.getElementById('customLogo');
+    img.src = dataUrl;
+    img.style.display = 'block';
+    // Save to localStorage
+    try { localStorage.setItem('phr_logo', dataUrl); } catch(e) {}
+  };
+  reader.readAsDataURL(file);
+}
+
+function loadSavedLogo() {
+  try {
+    const saved = localStorage.getItem('phr_logo');
+    if (saved) {
+      // Sidebar logo
+      const def = document.getElementById('defaultLogo');
+      const img = document.getElementById('customLogo');
+      if (def) def.style.display = 'none';
+      if (img) { img.src = saved; img.style.display = 'block'; }
+      // Login page logo
+      const ldef = document.getElementById('loginDefaultLogo');
+      const limg = document.getElementById('loginCustomLogo');
+      if (ldef) ldef.style.display = 'none';
+      if (limg) { limg.src = saved; limg.style.display = 'block'; }
+    }
+  } catch(e) {}
+}
+
+window.addEventListener('load', () => { initFirebase(); loadSavedLogo(); loadSavedLogoLogin(); });
+
+// Keep Render server alive — ping every 14 minutes
+function keepServerAlive() {
+  fetch('https://praba-hr-adms.onrender.com/', { method: 'GET', mode: 'no-cors' })
+    .catch(() => {}); // silent
+}
+setInterval(keepServerAlive, 14 * 60 * 1000); // every 14 min
+setTimeout(keepServerAlive, 5000); // first ping after 5 seconds
+</script>
+</body>
+</html>
