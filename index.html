@@ -459,7 +459,8 @@ tr:hover td{background:rgba(255,255,255,0.08);}
             <div class="fg"><label>In Time</label><input type="time" id="attIn"></div>
             <div class="fg"><label>Out Time</label><input type="time" id="attOut"></div>
           </div>
-          <button class="btn btn-teal" onclick="markAttendance()">✅ Mark Attendance</button>
+          <button class="btn btn-teal" onclick="markAttendance('in')">✅ Mark In</button>
+          <button class="btn btn-blue" onclick="markAttendance('out')">🚪 Mark Out</button>
           <div id="attMsg" style="margin-top:10px;font-size:13px;"></div>
         </div>
         <div class="card">
@@ -1085,29 +1086,37 @@ function refreshDash() { loadDashboard(); }
 // ═══════════════════════════════════════════
 // ATTENDANCE
 // ═══════════════════════════════════════════
-async function markAttendance() {
+async function markAttendance(mode) {
   const empId = document.getElementById('attEmp').value;
   const date = document.getElementById('attDate').value;
-  const inT = document.getElementById('attIn').value;
-  const outT = document.getElementById('attOut').value;
   const msg = document.getElementById('attMsg');
 
   if (!empId || !date) { msg.innerHTML = '<span style="color:#f87171;">Select employee and date</span>'; return; }
 
-  const h = netHrs(inT, outT);
-  const wh = company.workHrs || 8;
-  let status = 'present';
-  if (h < wh / 2) status = 'half-day';
-  else if (inT > (company.lateCutoff || '09:30')) status = 'late';
+  const enteredT = document.getElementById(mode === 'in' ? 'attIn' : 'attOut').value;
+  if (!enteredT) { msg.innerHTML = `<span style="color:#f87171;">Select ${mode === 'in' ? 'in' : 'out'} time</span>`; return; }
 
   msg.innerHTML = '<span style="color:var(--teal2);">⏳ Saving...</span>';
 
   let records = await getAttFirebase(date);
+  const existing = records.find(r => String(r.empId) === String(empId));
+  const inT = mode === 'in' ? enteredT : (existing?.inTime || '');
+  const outT = mode === 'out' ? enteredT : (existing?.outTime || '');
+
+  const h = netHrs(inT, outT);
+  const wh = company.workHrs || 8;
+  let status = existing?.status || 'present';
+  if (inT && outT) {
+    status = h < wh / 2 ? 'half-day' : (inT > (company.lateCutoff || '09:30') ? 'late' : 'present');
+  } else if (inT) {
+    status = inT > (company.lateCutoff || '09:30') ? 'late' : 'present';
+  }
+
   records = records.filter(r => String(r.empId) !== String(empId));
   records.push({ empId, date, inTime: inT, outTime: outT, status, source: 'manual', addedBy: currentUser.username, timestamp: Date.now() });
 
   await saveAttFirebase(date, records);
-  msg.innerHTML = '<span style="color:#4ade80;">✅ Saved! Synced to all devices.</span>';
+  msg.innerHTML = `<span style="color:#4ade80;">✅ ${mode === 'in' ? 'In' : 'Out'} time saved! Synced to all devices.</span>`;
   loadAttRecords();
   if (document.getElementById('page-dashboard').classList.contains('active')) loadDashboard();
 }
