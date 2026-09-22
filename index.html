@@ -459,8 +459,7 @@ tr:hover td{background:rgba(255,255,255,0.08);}
             <div class="fg"><label>In Time</label><input type="time" id="attIn"></div>
             <div class="fg"><label>Out Time</label><input type="time" id="attOut"></div>
           </div>
-          <button class="btn btn-teal" onclick="markAttendance('in')">✅ Mark In</button>
-          <button class="btn btn-blue" onclick="markAttendance('out')">🚪 Mark Out</button>
+          <button class="btn btn-teal" onclick="markAttendance()">✅ Mark Attendance</button>
           <div id="attMsg" style="margin-top:10px;font-size:13px;"></div>
         </div>
         <div class="card">
@@ -852,7 +851,7 @@ async function getAttFirebase(date) {
   }
   // Try Render API
   try {
-    const res = await fetch(`https://praba-hr-adms.onrender.com/api/attendance?date=${date}`, { signal: AbortSignal.timeout(5000) });
+    const res = await fetch(`https://praba-hr-adms-production.up.railway.app/api/attendance?date=${date}`, { signal: AbortSignal.timeout(5000) });
     const data = await res.json();
     if (data.records?.length) {
       const r = data.records;
@@ -1009,7 +1008,7 @@ function showPage(p, el) {
   if (window.innerWidth <= 768) toggleSB(false);
 
   if (p === 'dashboard') loadDashboard();
-  if (p === 'attendance') { populateEmpSelects(); loadAttRecords(); }
+  if (p === 'attendance') loadAttRecords();
   if (p === 'bulkentry') loadBulkGrid();
   if (p === 'employees') renderEmployees();
   if (p === 'leaves') { renderLeaves(); populateEmpSelects(); }
@@ -1029,7 +1028,6 @@ function refreshCurrentPage() {
   renderHolidays();
   renderLoans();
   renderLeaves();
-  populateEmpSelects();
 }
 
 function toggleSB(force) {
@@ -1086,37 +1084,29 @@ function refreshDash() { loadDashboard(); }
 // ═══════════════════════════════════════════
 // ATTENDANCE
 // ═══════════════════════════════════════════
-async function markAttendance(mode) {
+async function markAttendance() {
   const empId = document.getElementById('attEmp').value;
   const date = document.getElementById('attDate').value;
+  const inT = document.getElementById('attIn').value;
+  const outT = document.getElementById('attOut').value;
   const msg = document.getElementById('attMsg');
 
   if (!empId || !date) { msg.innerHTML = '<span style="color:#f87171;">Select employee and date</span>'; return; }
 
-  const enteredT = document.getElementById(mode === 'in' ? 'attIn' : 'attOut').value;
-  if (!enteredT) { msg.innerHTML = `<span style="color:#f87171;">Select ${mode === 'in' ? 'in' : 'out'} time</span>`; return; }
+  const h = netHrs(inT, outT);
+  const wh = company.workHrs || 8;
+  let status = 'present';
+  if (h < wh / 2) status = 'half-day';
+  else if (inT > (company.lateCutoff || '09:30')) status = 'late';
 
   msg.innerHTML = '<span style="color:var(--teal2);">⏳ Saving...</span>';
 
   let records = await getAttFirebase(date);
-  const existing = records.find(r => String(r.empId) === String(empId));
-  const inT = mode === 'in' ? enteredT : (existing?.inTime || '');
-  const outT = mode === 'out' ? enteredT : (existing?.outTime || '');
-
-  const h = netHrs(inT, outT);
-  const wh = company.workHrs || 8;
-  let status = existing?.status || 'present';
-  if (inT && outT) {
-    status = h < wh / 2 ? 'half-day' : (inT > (company.lateCutoff || '09:30') ? 'late' : 'present');
-  } else if (inT) {
-    status = inT > (company.lateCutoff || '09:30') ? 'late' : 'present';
-  }
-
   records = records.filter(r => String(r.empId) !== String(empId));
   records.push({ empId, date, inTime: inT, outTime: outT, status, source: 'manual', addedBy: currentUser.username, timestamp: Date.now() });
 
   await saveAttFirebase(date, records);
-  msg.innerHTML = `<span style="color:#4ade80;">✅ ${mode === 'in' ? 'In' : 'Out'} time saved! Synced to all devices.</span>`;
+  msg.innerHTML = '<span style="color:#4ade80;">✅ Saved! Synced to all devices.</span>';
   loadAttRecords();
   if (document.getElementById('page-dashboard').classList.contains('active')) loadDashboard();
 }
@@ -1191,7 +1181,7 @@ async function syncZKTeco() {
   btn.textContent = '⏳ Syncing...';
   btn.disabled = true;
   try {
-    const res = await fetch(`https://praba-hr-adms.onrender.com/api/attendance?date=${date}`, { signal: AbortSignal.timeout(15000) });
+    const res = await fetch(`https://praba-hr-adms-production.up.railway.app/api/attendance?date=${date}`, { signal: AbortSignal.timeout(30000) });
     const data = await res.json();
     if (data.records?.length) {
       const existing = getAtt(date);
@@ -1206,7 +1196,7 @@ async function syncZKTeco() {
       alert('No new records from ZKTeco today');
     }
   } catch(e) {
-    alert('ZKTeco server waking up... Try again in 60 seconds');
+    alert('❌ Server connect కాలేదు! Railway server check చేయండి.\nError: ' + e.message);
   }
   btn.textContent = '⚡ ZKTeco Sync';
   btn.disabled = false;
@@ -2441,7 +2431,7 @@ window.addEventListener('load', () => { initFirebase(); loadSavedLogo(); loadSav
 
 // Keep Render server alive — ping every 14 minutes
 function keepServerAlive() {
-  fetch('https://praba-hr-adms.onrender.com/', { method: 'GET', mode: 'no-cors' })
+  fetch('https://praba-hr-adms-production.up.railway.app/', { method: 'GET', mode: 'no-cors' })
     .catch(() => {}); // silent
 }
 setInterval(keepServerAlive, 14 * 60 * 1000); // every 14 min
