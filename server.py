@@ -16,6 +16,13 @@ logger = logging.getLogger(__name__)
 
 app = Flask(__name__)
 
+@app.after_request
+def add_cors_headers(response):
+    response.headers['Access-Control-Allow-Origin'] = '*'
+    response.headers['Access-Control-Allow-Methods'] = 'GET, POST, OPTIONS'
+    response.headers['Access-Control-Allow-Headers'] = 'Content-Type'
+    return response
+
 # Firebase initialization
 db = None
 
@@ -172,10 +179,8 @@ def save_to_firebase(records):
                 by_date[date] = []
             by_date[date].append(rec)
         
-        company_ref = db.collection('companies').document(COMPANY_ID)
-        
         for date, day_records in by_date.items():
-            doc_ref = company_ref.collection('attendance').document(date)
+            doc_ref = db.collection('attendance').document(date)
             
             # Merge with existing records
             existing = doc_ref.get()

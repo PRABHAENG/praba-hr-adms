@@ -851,7 +851,7 @@ async function getAttFirebase(date) {
   }
   // Try Render API
   try {
-    const res = await fetch(`https://praba-hr-adms-production.up.railway.app/api/attendance?date=${date}`, { signal: AbortSignal.timeout(5000) });
+    const res = await fetch(`https://praba-hr-adms.onrender.com/api/attendance?date=${date}`, { signal: AbortSignal.timeout(5000) });
     const data = await res.json();
     if (data.records?.length) {
       const r = data.records;
@@ -1028,6 +1028,7 @@ function refreshCurrentPage() {
   renderHolidays();
   renderLoans();
   renderLeaves();
+  populateEmpSelects();
 }
 
 function toggleSB(force) {
@@ -1181,7 +1182,7 @@ async function syncZKTeco() {
   btn.textContent = '⏳ Syncing...';
   btn.disabled = true;
   try {
-    const res = await fetch(`https://praba-hr-adms-production.up.railway.app/api/attendance?date=${date}`, { signal: AbortSignal.timeout(15000) });
+    const res = await fetch(`https://praba-hr-adms.onrender.com/api/attendance?date=${date}`, { signal: AbortSignal.timeout(15000) });
     const data = await res.json();
     if (data.records?.length) {
       const existing = getAtt(date);
@@ -2431,7 +2432,7 @@ window.addEventListener('load', () => { initFirebase(); loadSavedLogo(); loadSav
 
 // Keep Render server alive — ping every 14 minutes
 function keepServerAlive() {
-  fetch('https://praba-hr-adms-production.up.railway.app/', { method: 'GET', mode: 'no-cors' })
+  fetch('https://praba-hr-adms.onrender.com/', { method: 'GET', mode: 'no-cors' })
     .catch(() => {}); // silent
 }
 setInterval(keepServerAlive, 14 * 60 * 1000); // every 14 min
