@@ -1008,7 +1008,7 @@ function showPage(p, el) {
   if (window.innerWidth <= 768) toggleSB(false);
 
   if (p === 'dashboard') loadDashboard();
-  if (p === 'attendance') loadAttRecords();
+  if (p === 'attendance') { populateEmpSelects(); loadAttRecords(); }
   if (p === 'bulkentry') loadBulkGrid();
   if (p === 'employees') renderEmployees();
   if (p === 'leaves') { renderLeaves(); populateEmpSelects(); }
